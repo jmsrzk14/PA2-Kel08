@@ -160,89 +160,79 @@ func ShowScore(ctx *fiber.Ctx) error {
 	return ctx.JSON(groupedByYear)
 }
 
-// func UpdateScore(ctx *fiber.Ctx) error {
-// 	ScoreIDStr := ctx.Params("username")
+func ShowScorePacket(ctx *fiber.Ctx) error {
+	idSiswa := ctx.Params("id_siswa")
 
-// 	var Score models.T_Nilai
+	var scores []models.T_Nilai
 
-// 	result := database.DB.Where("username = ?", ScoreIDStr).First(&Score)
-// 	if result.RowsAffected == 0 {
-// 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-// 			"message": "Score not found",
-// 		})
-// 	}
+	err := database.DB.
+		Select("id_siswa, id_paket, year, total, pu, ppu, pbm, pk, lbi, lbe, pm").
+		Where("id_siswa = ?", idSiswa).
+		Find(&scores).Error
 
-// 	first_name := ctx.FormValue("first_name")
-// 	if first_name == "" {
-// 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"message": "first_name is required",
-// 		})
-// 	}
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal mengambil data nilai",
+		})
+	}
 
-// 	no_utbk := ctx.FormValue("no_utbk")
-// 	no_utbkInt, err := strconv.Atoi(no_utbk)
-// 	if err != nil {
-// 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"message": "no_utbk must be a number",
-// 		})
-// 	}
+	if len(scores) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada nilai ditemukan untuk siswa ini",
+		})
+	}
 
-// 	nisn := ctx.FormValue("nisn")
-// 	nisnInt, err := strconv.Atoi(nisn)
-// 	if err != nil {
-// 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"message": "nisn must be a number",
-// 		})
-// 	}
+	groupedByYear := make(map[string]map[string]fiber.Map)
 
-// 	grade := ctx.FormValue("grade")
-// 	if grade == "" {
-// 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"message": "grade is required",
-// 		})
-// 	}
+	for _, score := range scores {
+		yearStr := strconv.Itoa(score.Year)
 
-// 	updateResult := database.DB.Model(&models.T_Nilai{}).Where("username = ?", ScoreIDStr).Updates(models.T_Nilai{
-// 		First_Name: first_name,
-// 		No_UTBK:    &no_utbkInt,
-// 		NISN:       &nisnInt,
-// 		Grade:      &grade,
-// 	})
+		var packet struct {
+			NamaPaket string `json:"nama_paket"`
+		}
+	
+		err = database.DB.Table("t_pakets").
+			Select("nama_paket").
+			Where("id = ?", score.Id_Paket).
+			First(&packet).Error
+	
+		if err != nil {
+			packet.NamaPaket = "-"
+		}
 
-// 	if updateResult.Error != nil {
-// 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-// 			"message": "Error Updating",
-// 			"error":   updateResult.Error.Error(),
-// 		})
-// 	}
+		if _, exists := groupedByYear[yearStr]; !exists {
+			groupedByYear[yearStr] = make(map[string]fiber.Map)
+		}
 
-// 	return ctx.JSON(fiber.Map{
-// 		"message": "Score updated successfully",
-// 		"Score":   Score,
-// 	})
-// }
+		groupedByYear[yearStr][packet.NamaPaket] = fiber.Map{
+			"pu":    score.Pu,
+			"ppu":   score.Ppu,
+			"pbm":   score.Pbm,
+			"pk":    score.Pk,
+			"lbi":   score.Lbi,
+			"lbe":   score.Lbe,
+			"pm":    score.Pm,
+			"total": score.Total,
+		}
+	}
 
-// func DeleteScore(ctx *fiber.Ctx) error {
-// 	ScoreUsernameStr := ctx.Params("username")
+	return ctx.JSON(groupedByYear)
+}
 
-// 	var Score models.T_Nilai
+func GetScoreByTahunUserPaket(ctx *fiber.Ctx) error {
+    tahun := ctx.Params("tahun")
+    idUsers := ctx.Params("id_users")
+    idPaket := ctx.Params("id_paket")
 
-// 	database.DB.Where("username = ?", ScoreUsernameStr).First(&Score)
+    var score[] models.T_Nilai
+	fmt.Println(tahun, idUsers, idPaket)
+    result := database.DB.Where("year = ? AND id_siswa = ? AND id_paket = ?", tahun, idUsers, idPaket).First(&score)
 
-// 	if ScoreUsernameStr != Score.Username {
-// 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-// 			"message": "Score not found",
-// 		})
-// 	}
+    if result.Error != nil {
+        return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+            "error": "Data tidak ditemukan untuk kombinasi tahun, user, dan paket tersebut",
+        })
+    }
 
-// 	if err := database.DB.Where("username = ?", ScoreUsernameStr).Delete(&models.T_Nilai{}).Error; err != nil {
-// 		fmt.Println("Delete Error:", err)
-// 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-// 			"message": "Failed to Delete Table",
-// 		})
-// 	}
-
-// 	return ctx.JSON(fiber.Map{
-// 		"message": "Scores deleted successfully",
-// 	})
-// }
+    return ctx.JSON(score)
+}

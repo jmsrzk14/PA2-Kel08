@@ -19,6 +19,6 @@ func Connect() {
 	DB = conn
 
 	conn.AutoMigrate(
-		&models.Payment{})
+		&models.T_Ptn{}, &models.T_Paket{}, &models.T_Prodi{}, &models.T_Daya_Tampung_Prodi{}, &models.Pengumuman{}, &models.Provinsi{}, &models.Kabupaten{}, &models.Kecamatan{}, &models.Sekolah_Sma{}, &models.T_Siswa{}, &models.T_Nilai{}, &models.Payment{})
 
 }

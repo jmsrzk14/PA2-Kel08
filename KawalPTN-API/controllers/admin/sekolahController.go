@@ -19,21 +19,24 @@ func CreateSekolah(ctx *fiber.Ctx) error {
 	}
 
 	propinsi := ctx.FormValue("propinsi")
-	if propinsi == "" {
+	propinsiInt, err := strconv.Atoi(propinsi)
+	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "propinsi is required",
 		})
 	}
 
 	kabupaten := ctx.FormValue("kabupaten")
-	if kabupaten == "" {
+	kabupatenInt, err := strconv.Atoi(kabupaten)
+	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "kabupaten is required",
 		})
 	}
 
 	kecamatan := ctx.FormValue("kecamatan")
-	if kecamatan == "" {
+	kecamatanInt, err := strconv.Atoi(kecamatan)
+	if err != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "kecamatan is required",
 		})
@@ -61,13 +64,13 @@ func CreateSekolah(ctx *fiber.Ctx) error {
 	}
 
 	school := models.Sekolah_Sma{
-		Npsn:           npsnInt,
-		Propinsi:       propinsi,
-		Kabupaten_kota: kabupaten,
-		Kecamatan:      kecamatan,
-		Bentuk:         bentuk,
-		Sekolah:        sekolah,
-		Status:         status,
+		Npsn:        npsnInt,
+		ProvinsiID:  uint(propinsiInt),
+		KabupatenID: uint(kabupatenInt),
+		KecamatanID: uint(kecamatanInt),
+		Bentuk:      bentuk,
+		Sekolah:     sekolah,
+		Status:      status,
 	}
 
 	fmt.Println("Saving to DB:", school)
@@ -97,7 +100,7 @@ func ShowSekolah(ctx *fiber.Ctx) error {
 	var sekolah models.Sekolah_Sma
 
 	err := database.DB.Model(&sekolah).
-		Select("npsn, propinsi, kabupaten_kota, kecamatan, bentuk, sekolah, status").
+		Select("npsn, provinsi_id, kabupaten_id, kecamatan_id, bentuk, sekolah, status").
 		Where("id = ?", SekolahIDStr).
 		First(&sekolah).Error
 
@@ -107,11 +110,50 @@ func ShowSekolah(ctx *fiber.Ctx) error {
 		})
 	}
 
+	var province struct {
+		Provinsi string `json:"nama_provinsi"`
+	}
+
+	err = database.DB.Table("provinsis").
+		Select("provinsi").
+		Where("id = ?", sekolah.ProvinsiID).
+		First(&province).Error
+
+	if err != nil {
+		province.Provinsi = "-"
+	}
+
+	var regency struct {
+		Kabupaten string `json:"nama_kabupaten"`
+	}
+
+	err = database.DB.Table("kabupatens").
+		Select("kabupaten").
+		Where("id = ?", sekolah.KabupatenID).
+		First(&regency).Error
+
+	if err != nil {
+		regency.Kabupaten = "-"
+	}
+
+	var subdistric struct {
+		Kecamatan string `json:"nama_kecamatan"`
+	}
+
+	err = database.DB.Table("kecamatans").
+		Select("kecamatan").
+		Where("id = ?", sekolah.KecamatanID).
+		First(&subdistric).Error
+
+	if err != nil {
+		subdistric.Kecamatan = "-"
+	}
+
 	response := fiber.Map{
 		"npsn":           sekolah.Npsn,
-		"propinsi":       sekolah.Propinsi,
-		"kabupaten_kota": sekolah.Kabupaten_kota,
-		"kecamatan":      sekolah.Kecamatan,
+		"nama_provinsi":  province.Provinsi,
+		"nama_kabupaten": regency.Kabupaten,
+		"nama_kecamatan": subdistric.Kecamatan,
 		"bentuk":         sekolah.Bentuk,
 		"sekolah":        sekolah.Sekolah,
 		"status":         sekolah.Status,
@@ -140,27 +182,6 @@ func UpdateSekolah(ctx *fiber.Ctx) error {
 		})
 	}
 
-	propinsi := ctx.FormValue("propinsi")
-	if propinsi == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "propinsi is required",
-		})
-	}
-
-	kabupaten := ctx.FormValue("kabupaten")
-	if kabupaten == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "kabupaten is required",
-		})
-	}
-
-	kecamatan := ctx.FormValue("kecamatan")
-	if kecamatan == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "kecamatan is required",
-		})
-	}
-
 	bentuk := ctx.FormValue("bentuk")
 	if bentuk == "" {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -183,13 +204,10 @@ func UpdateSekolah(ctx *fiber.Ctx) error {
 	}
 
 	updateResult := database.DB.Model(&models.Sekolah_Sma{}).Where("id = ?", SekolahIDStr).Updates(models.Sekolah_Sma{
-		Npsn:           npsnInt,
-		Propinsi:       propinsi,
-		Kabupaten_kota: kabupaten,
-		Kecamatan:      kecamatan,
-		Bentuk:         bentuk,
-		Sekolah:        sekolahs,
-		Status:         status,
+		Npsn:    npsnInt,
+		Bentuk:  bentuk,
+		Sekolah: sekolahs,
+		Status:  status,
 	})
 
 	if updateResult.Error != nil {
@@ -213,12 +231,6 @@ func DeleteSekolah(ctx *fiber.Ctx) error {
 
 	database.DB.Where("id = ?", SekolahStr).First(&sekolah)
 
-	if SekolahStr != sekolah.ID {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Sekolah not found",
-		})
-	}
-
 	if err := database.DB.Where("id = ?", SekolahStr).Delete(&models.Sekolah_Sma{}).Error; err != nil {
 		fmt.Println("Delete Error:", err)
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -228,5 +240,32 @@ func DeleteSekolah(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(fiber.Map{
 		"message": "Sekolahs deleted successfully",
+	})
+}
+
+func GetSekolahByRegion(ctx *fiber.Ctx) error {
+    provinsiID := ctx.Params("provinsi_id")
+    kabupatenID := ctx.Params("kabupaten_id")
+    kecamatanID := ctx.Params("kecamatan_id")
+
+    if provinsiID == "" && kabupatenID == "" && kecamatanID == "" {
+        return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+            "error": "Minimal salah satu parameter wilayah harus disertakan",
+        })
+    }
+
+    var sekolahList []models.Sekolah_Sma
+
+	err := database.DB.Where("provinsi_id = ? AND kabupaten_id = ? AND kecamatan_id = ?", provinsiID, kabupatenID, kecamatanID).
+		Find(&sekolahList).Error
+
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data sekolah",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"data": sekolahList,
 	})
 }

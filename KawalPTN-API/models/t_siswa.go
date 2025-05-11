@@ -14,19 +14,19 @@ type T_Siswa struct {
 	NISN           *int        `json:"nisn" gorm:"default:null"`
 	First_Name     string      `json:"first_name" gorm:"not null"`
 	Last_Name      *string     `json:"last_name" gorm:"default:null"`
-	Asal_Sekolah   *string      `json:"asal_sekolah" gorm:"type:char(100)"`
+	Asal_Sekolah   *uint       `json:"asal_sekolah"`
 	Sekolah_Sma    Sekolah_Sma `gorm:"foreignKey:Asal_Sekolah;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;" json:"sekolah_sma"`
 	Kelompok_Ujian string      `json:"kelompok_ujian" gorm:"type:enum('SAINTEK', 'SOSHUM', 'CAMPURAN');not null" validate:"required,oneof=SAINTEK SOSHUM CAMPURAN"`
 	Kelas          *string     `json:"kelas" gorm:"default:null"`
 	Grade          *string     `json:"grade" gorm:"type:enum('A', 'B', 'C', 'LULUS', 'SUPERINTENSIF', 'TIDAK TES');default:'TIDAK TES'" validate:"required,oneof=A B C LULUS SUPERINTENSIF TIDAK TES"`
-	Telp1          *string      `json:"telp1" gorm:"not null"`
+	Telp1          *string     `json:"telp1" gorm:"default:null"`
 	Telp2          *string     `json:"telp2" gorm:"default:null"`
-	Email          string     `json:"email" gorm:"default:null"`
+	Email          string      `json:"email" gorm:"default:null"`
 	Group1         *string     `json:"group1" gorm:"default:null"`
 	Cohort1        *string     `json:"cohort1" gorm:"default:null"`
-	CreatedAt      time.Time   `gorm:"autoCreateTime;default:null" json:"created_at"`
+	CreatedAt      time.Time   `gorm:"autoCreateTime" json:"created_at"`
 	CreatedBy      *int        `json:"created_by" gorm:"default:null"`
-	UpdatedAt      time.Time   `gorm:"autoUpdateTime;default:null" json:"updated_at"`
+	UpdatedAt      time.Time   `gorm:"autoUpdateTime" json:"updated_at"`
 	UpdatedBy      *int        `json:"updated_by" gorm:"default:null"`
 	Status         *int        `json:"status" gorm:"default:0"`
 	Status_KPJ     *int        `json:"status_kpj" gorm:"default:0"`
@@ -46,4 +46,3 @@ func (t_siswa *T_Siswa) ValidateTSiswa() error {
 	validate := validator.New()
 	return validate.StructPartial(t_siswa, "Username", "Password", "First_Name", "Email", "Kelompok_Ujian", "CreatedAt", "UpdatedAt")
 }
-

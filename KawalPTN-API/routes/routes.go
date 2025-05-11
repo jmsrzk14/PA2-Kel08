@@ -40,9 +40,12 @@ func Setup(app *fiber.App) {
 	admin.Get("/viewMajor/:id_prodi", controllers.ShowMajor)
 	admin.Put("/editMajor/:id_prodi", controllers.UpdateMajor)
 	admin.Delete("/listMajor/:id_prodi", controllers.DeleteMajor)
+	admin.Get("/listMajor/:id_ptn", controllers.GetMajorByUniversity)
 
 	admin.Post("/createScore", controllers.CreateScore)
 	admin.Get("/viewScore/:id_siswa", controllers.ShowScore)
+	admin.Get("/viewScorePacket/:id_siswa", controllers.ShowScorePacket)
+	admin.Get("/viewScoreDetail/:tahun/:id_users/:id_paket", controllers.GetScoreByTahunUserPaket)
 
 	admin.Post("/createAnnouncement", controllers.CreateAnnouncement)
 	admin.Get("/listAnnouncement", controllers.IndexAnnouncement)
@@ -55,20 +58,26 @@ func Setup(app *fiber.App) {
 	admin.Get("/viewSekolah/:id", controllers.ShowSekolah)
 	admin.Put("/editSekolah/:id", controllers.UpdateSekolah)
 	admin.Delete("/listSekolah/:id", controllers.DeleteSekolah)
+	admin.Get("/listSekolah/:provinsi_id/:kabupaten_id/:kecamatan_id", controllers.GetSekolahByRegion)
 
 	admin.Get("/listPayment", studentController.IndexPayment)
 	admin.Get("/viewPayment/:id", studentController.ShowPayment)
+	admin.Get("/viewPaymentCourses/:id", studentController.ShowPaymentCourses)
 
 	admin.Post("/createCapacity", controllers.CreateCapacity)
 	admin.Get("/listCapacity/:id_prodi", controllers.IndexCapacity)
 	admin.Delete("/listCapacity/:id", controllers.DeleteCapacity)
+
+	admin.Get("/region/province", controllers.IndexProvince)
+	admin.Get("/region/regency/:id_province", controllers.IndexRegency)
+	admin.Get("/region/subdistrict/:id_regency", controllers.IndexSubdistrict)
 
 	student := app.Group("/student")
 	student.Post("/login", studentController.Login)
 	student.Get("/profile", studentController.Profile)
 	student.Post("/register", studentController.Register)
 	student.Post("/logout", studentController.Logout)
-	student.Put("/update/:nisn", studentController.UpdateStudent)
+	student.Put("/update/:id", studentController.UpdateStudent)
 	student.Get("/listPacket", controllers.IndexPacket)
 	student.Get("/viewPacket/:id", controllers.ShowPacket)
 

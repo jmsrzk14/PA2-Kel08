@@ -75,13 +75,13 @@ func ShowStudent(ctx *fiber.Ctx) error {
 	var student models.T_Siswa
 
 	err := database.DB.Model(&student).
-		Select("id, username, active, nisn, first_name, grade, last_name, no_utbk, pilihan1_utbk, pilihan2_utbk, pilihan1_utbk_aktual, pilihan2_utbk_aktual, kelompok_ujian, asal_sekolah").
+		Select("id, username, nisn, first_name, grade, last_name, no_utbk, pilihan1_utbk, pilihan2_utbk, pilihan1_utbk_aktual, pilihan2_utbk_aktual, kelompok_ujian, asal_sekolah").
 		Where("username = ?", StudentIDStr).
 		First(&student).Error
 
 	if err != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Student not found",
+			"message": err,
 		})
 	}
 

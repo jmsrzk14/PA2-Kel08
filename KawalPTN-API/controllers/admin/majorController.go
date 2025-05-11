@@ -85,17 +85,26 @@ func CreateMajor(ctx *fiber.Ctx) error {
 }
 
 func IndexMajor(ctx *fiber.Ctx) error {
-	var major []models.T_Prodi
+	var majors []models.T_Prodi
 
-	database.DB.Find(&major)
+	result := database.DB.
+		Select("id_prodi", "nama_prodi", "nama_prodi_ptn").
+		Find(&majors)
 
-	if len(major) == 0 {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "major not found",
+	if result.Error != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to fetch majors",
+			"error":   result.Error.Error(),
 		})
 	}
 
-	return ctx.JSON(major)
+	if len(majors) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "no majors found",
+		})
+	}
+
+	return ctx.JSON(majors)
 }
 
 func ShowMajor(ctx *fiber.Ctx) error {
@@ -209,5 +218,24 @@ func DeleteMajor(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(fiber.Map{
 		"message": "Majors deleted successfully",
+	})
+}
+
+func GetMajorByUniversity(ctx *fiber.Ctx) error {
+    universityID := ctx.Params("id_ptn")
+
+    var majorList []models.T_Prodi
+
+	err := database.DB.Where("ptn_id = ?", universityID).
+		Find(&majorList).Error
+
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data major",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"data": majorList,
 	})
 }

@@ -121,3 +121,44 @@ func ShowPayment(ctx *fiber.Ctx) error {
 
 	return ctx.JSON(response)
 }
+
+func ShowPaymentCourses(ctx *fiber.Ctx) error {
+	PaymentIDStr := ctx.Params("id")
+
+	var payment models.Payment
+
+	err := database.DB.Model(&payment).
+		Select("id, id_siswa, id_paket, harga, created_at").
+		Where("id = ?", PaymentIDStr).
+		First(&payment).Error
+
+	if err != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Announcement not found",
+		})
+	}
+
+	var student struct {
+		First_Name string `json:"nama_siswa"`
+	}
+
+	err = database.DB.Table("t_siswas").
+		Select("first_name").
+		Where("id = ?", payment.IdSiswa).
+		First(&student).Error
+
+	if err != nil {
+		student.First_Name = "-"
+	}
+
+
+	response := fiber.Map{
+		"id":         payment.Id,
+		"nama":       student.First_Name,
+		"id_paket":   payment.IdPaket,
+		"harga":      payment.Harga,
+		"created_at": payment.CreatedAt,
+	}
+
+	return ctx.JSON(response)
+}

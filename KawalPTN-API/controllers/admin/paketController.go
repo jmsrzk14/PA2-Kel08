@@ -42,11 +42,74 @@ func CreatePacket(ctx *fiber.Ctx) error {
 		})
 	}
 
+	pu := ctx.FormValue("pu")
+	puInt, err := strconv.Atoi(pu)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "pu is required",
+		})
+	}
+
+	ppu := ctx.FormValue("ppu")
+	ppuInt, err := strconv.Atoi(ppu)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "ppu is required",
+		})
+	}
+
+	pbm := ctx.FormValue("pbm")
+	pbmInt, err := strconv.Atoi(pbm)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "pbm is required",
+		})
+	}
+
+	pk := ctx.FormValue("pk")
+	pkInt, err := strconv.Atoi(pk)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "pk is required",
+		})
+	}
+
+	lbi := ctx.FormValue("lbi")
+	lbiInt, err := strconv.Atoi(lbi)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "lbi is required",
+		})
+	}
+
+	lbe := ctx.FormValue("lbe")
+	lbeInt, err := strconv.Atoi(lbe)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "lbe is required",
+		})
+	}
+
+	pm := ctx.FormValue("pm")
+	pmInt, err := strconv.Atoi(pm)
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "pm is required",
+		})
+	}
+
 	packet := models.T_Paket{
 		Nama_Paket: name,
 		Total:      totalInt,
 		Active:     activeInt,
 		Price:      priceInt,
+		Pu:         puInt,
+		Ppu:        ppuInt,
+		Pbm:        pbmInt,
+		Pk:         pkInt,
+		Lbi:        lbiInt,
+		Lbe:        lbeInt,
+		Pm:         pmInt,
 	}
 
 	fmt.Println("Saving to DB:", packet)
