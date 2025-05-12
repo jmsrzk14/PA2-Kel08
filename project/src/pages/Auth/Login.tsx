@@ -55,7 +55,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole }) => {
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Or{' '}
-          <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link to="/registeradmin" className="font-medium text-indigo-600 hover:text-indigo-500">
             create a new account
           </Link>
         </p>
@@ -117,11 +117,11 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole }) => {
                   </label>
                 </div>
 
-                <div className="text-sm">
+                {/* <div className="text-sm">
                   <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
                     Forgot your password?
                   </a>
-                </div>
+                </div> */}
               </div>
 
               <div>

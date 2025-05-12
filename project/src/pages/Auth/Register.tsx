@@ -83,7 +83,7 @@ const Register: React.FC = () => {
           text: 'Silakan login untuk melanjutkan!',
           confirmButtonColor: '#6366f1',
         }).then(() => {
-          navigate('/loginsiswa');
+          navigate('/loginadmin');
         });
       }      
     } catch (error: any) {
@@ -112,7 +112,7 @@ const Register: React.FC = () => {
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{' '}
-          <Link to="/loginsiswa" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link to="/loginadmin" className="font-medium text-indigo-600 hover:text-indigo-500">
             Sign in
           </Link>
         </p>

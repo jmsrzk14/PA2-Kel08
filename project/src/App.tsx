@@ -5,8 +5,10 @@ import StudentDashboard from './pages/Student/Dashboard';
 import LoginAdmin from './pages/Auth/Login';
 import LoginSiswa from './pages/Student/Auth/Login';
 import Register from './pages/Student/Auth/Register';
+import RegisterAdmin from './pages/Auth/Register';
 import ForgotPass from './pages/Student/Auth/forgot_pass';
 import ChangePass from './pages/Student/Auth/change_pass';
+import Guest from './pages/Guest/Guest';
 
 function AppRoutes() {
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -37,6 +39,9 @@ function AppRoutes() {
   
   return (
     <Routes>
+      <Route path="/" element={<Navigate to="/guest" replace />} />
+      <Route path="/guest" element={<Guest />} />
+
       <Route
         path="/dashboard/*"
         element={
@@ -80,6 +85,7 @@ function AppRoutes() {
       />
 
       <Route path="/register" element={<Register />} />
+      <Route path="/registeradmin" element={<RegisterAdmin />} />
       <Route path="/forgot_pass" element={<ForgotPass />} />
       <Route path="/change_pass" element={<ChangePass />} />
 
