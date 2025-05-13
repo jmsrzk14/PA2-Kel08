@@ -175,7 +175,6 @@ const LihatSiswa = () => {
             <p><strong>Username:</strong> {username}</p>
             <p><strong>Nama Siswa:</strong> {firstName} {lastName}</p>
             <p><strong>NISN:</strong> {nisn || "-"}</p>
-            <p><strong>Aktif:</strong> {active || "-"}</p>
             <p><strong>Asal Sekolah:</strong> {namaSekolah || "-"}</p>
             <p><strong>Kelompok Ujian:</strong> {kelompokUjian}</p>
             <p><strong>No UTBK:</strong> {noUtbk || "-"}</p>

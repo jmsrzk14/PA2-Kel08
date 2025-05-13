@@ -6,11 +6,11 @@ const breadcrumbMap: { [key: string]: string } = {
   dashboard: "Dashboard",
   home: "Home",
   announcement: "Pengumuman",
-  createAnnouncement: "Tambah Pengumuman",
   viewAnnouncement: "Detail Pengumuman",
   editAnnouncement: "Update Pengumuman",
   detailtryout: "Detail Tryout",
   editprofil: "Edit Profil",
+  hasiltryout: "Simulasi",
 };
 
 const Breadcrumbs: React.FC = () => {
