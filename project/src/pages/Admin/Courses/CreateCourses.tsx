@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 
 const TambahProdi = () => {
   const [namaProdi, setNamaProdi] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
   const [total, setTotal] = useState('');
   const [active, setActive] = useState('');
   const [price, setPrice] = useState('');
@@ -21,6 +22,7 @@ const TambahProdi = () => {
 
     const formData = new URLSearchParams();
     formData.append("name", namaProdi);
+    formData.append("deskripsi", deskripsi);
     formData.append("total", total.toString());
     formData.append("active", active.toString());
     formData.append("price", price.toString());
@@ -74,6 +76,15 @@ const TambahProdi = () => {
             onChange={(e) => setNamaProdi(e.target.value)}
             required
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Deskripsi Paket</label>
+         <textarea
+            className="mt-1 p-2 border rounded w-full"
+            value={deskripsi}
+            onChange={(e) => setDeskripsi(e.target.value)}
+            required
+          ></textarea>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Total</label>

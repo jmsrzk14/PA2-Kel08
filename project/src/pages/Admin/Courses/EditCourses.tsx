@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 const EditPaket = () => {
   const { id } = useParams(); 
   const [namaPaket, setNamaPaket] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
   const [total, setTotal] = useState('');
   const [active, setActive] = useState('');
   const [price, setPrice] = useState('');
@@ -19,6 +20,7 @@ const EditPaket = () => {
         console.log("Data dari API:", data);
         
         setNamaPaket(data.nama_paket);
+        setDeskripsi(data.deskripsi);
         setTotal(data.total.toString());
         setActive(data.active.toString());
         setPrice(data.price.toString());
@@ -35,6 +37,7 @@ const EditPaket = () => {
 
     const formData = new URLSearchParams();
     formData.append("name", namaPaket);
+    formData.append("deskripsi", deskripsi);
     formData.append("total", total);
     formData.append("active", active);
     formData.append("price", price);
@@ -99,6 +102,15 @@ const EditPaket = () => {
             onChange={(e) => setNamaPaket(e.target.value)}
             required
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700">Deskripsi Paket</label>
+          <textarea
+            className="mt-1 p-2 border rounded w-full"
+            value={deskripsi}
+            onChange={(e) => setDeskripsi(e.target.value)}
+            required
+          ></textarea>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700">Total</label>

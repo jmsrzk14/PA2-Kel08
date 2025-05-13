@@ -9,6 +9,8 @@ type CoursePackage = {
     id: number;
     nama_paket: string;
     price: number;
+    subjects: string[];
+    deskripsi: string;
 };
   
 
@@ -24,22 +26,22 @@ const TryoutPackageCard = ({
     nama_paket = "",
     price = 0,
     duration = "",
-    features = [""],
+    // features = [""],
     isPopular = false,
     participants = 0,
-    subjects = [""],
-    description = ""
+    subjects = [],
+    deskripsi = "",
 }: {
     id: number;
     order_id?: string;
     nama_paket?: string;
     price?: number;
     duration?: string;
-    features?: string[];
+    // features?: string[];
     isPopular?: boolean;
     participants?: number;
     subjects?: string[];
-    description?: string;
+    deskripsi?: string;
 }) => {
     const [isPaymentOpen, setPaymentOpen] = useState(false);
     const [paymentMessage, setPaymentMessage] = useState("");
@@ -170,7 +172,7 @@ const TryoutPackageCard = ({
                 className="fixed inset-0 flex items-center justify-center" contentLabel="Detail Paket">
                 <div className='bg-white rounded-2xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-lg border hover:border-blue-500 transition-all duration-300'>
                     <div className='flex justify-between items-center mb-4'>
-                        <h2 className='text-2xl font-bold text-gray-800'>Detail {nama_paket}</h2>
+                        <h2 className='text-2xl font-bold text-gray-800'>Detail Paket {nama_paket}</h2>
                         <button onClick={closeModal} className='text-gray-500 hover:text-red-500'>
                             <X size={25} />
                         </button>
@@ -178,10 +180,10 @@ const TryoutPackageCard = ({
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Deskripsi</h3>
-                        <p className='text-gray-600'>{description}</p>
+                        <p className='text-gray-600'>{deskripsi}</p>
                     </div>
 
-                    <div className='mb-6'>
+                    {/* <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Fitur Paket</h3>
                         <ul className="space-y-3 mb-6">
                             {features.map((feature, index) => (
@@ -193,20 +195,24 @@ const TryoutPackageCard = ({
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Mata Pelajaran</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {subjects.map((subject, index) => (
-                                <span
-                                    key={index}
-                                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm shadow-lg border border-blue-500 shadow-md hover:shadow-blue-500 transition-all duration-300"
-                                >
-                                    {subject}
-                                </span>
-                            ))}
-                        </div>
+                        {Array.isArray(subjects) && subjects.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {subjects.map((subject, index) => (
+                                    <span
+                                        key={index}
+                                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm shadow-lg border border-blue-500 shadow-md hover:shadow-blue-500 transition-all duration-300"
+                                    >
+                                        {subject}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-600">Tidak ada mata pelajaran tersedia.</p>
+                        )}
                     </div>
 
                     <div className='mb-6'>
@@ -252,7 +258,17 @@ const Paket = () => {
         const response = await fetch("http://127.0.0.1:8000/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
-        setPackages(data);
+            if (!Array.isArray(data)) {
+                throw new Error("Format data tidak valid!");
+            }
+            const formattedPackages: CoursePackage[] = data.map((item: any) => ({
+                id: item.id,
+                nama_paket: item.nama_paket,
+                price: item.price,
+                subjects: Array.isArray(item.subjects) ? item.subjects : [],
+                deskripsi: item.deskripsi || "",
+            }));
+            setPackages(formattedPackages);
         } catch (err) {
         setError((err as Error).message);
         } finally {
@@ -278,7 +294,16 @@ const Paket = () => {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {packages.map((pkg, index) => (
-                    <TryoutPackageCard key={index} {...pkg} />
+                    <TryoutPackageCard
+                        key={index}
+                        id={pkg.id}
+                        nama_paket={pkg.nama_paket}
+                        price={pkg.price}
+                        subjects={pkg.subjects}
+                        deskripsi={pkg.deskripsi}
+                        duration="30 hari"
+                        participants={0}
+                    />
                 ))}
             </div>
         </div>

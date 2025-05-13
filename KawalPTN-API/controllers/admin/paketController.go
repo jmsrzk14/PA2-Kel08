@@ -3,6 +3,7 @@ package controllers
 import (
 	"KawalPTN-API/database"
 	"KawalPTN-API/models"
+	"encoding/json"
 	"fmt"
 	"strconv"
 
@@ -10,9 +11,16 @@ import (
 )
 
 func CreatePacket(ctx *fiber.Ctx) error {
-	fmt.Println("Received request:", ctx.FormValue("name"), ctx.FormValue("total"), ctx.FormValue("active"), ctx.FormValue("price"))
+	fmt.Println("Received request:", ctx.FormValue("name"), ctx.FormValue("deskripsi"), ctx.FormValue("total"), ctx.FormValue("active"), ctx.FormValue("price"))
 	name := ctx.FormValue("name")
 	if name == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "name is required",
+		})
+	}
+
+	deskripsi := ctx.FormValue("deskripsi")
+	if deskripsi == "" {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "name is required",
 		})
@@ -98,8 +106,39 @@ func CreatePacket(ctx *fiber.Ctx) error {
 		})
 	}
 
+	subjects := []string{}
+	if puInt > 0 {
+		subjects = append(subjects, "PU")
+	}
+	if ppuInt > 0 {
+		subjects = append(subjects, "PPU")
+	}
+	if pbmInt > 0 {
+		subjects = append(subjects, "PBM")
+	}
+	if pkInt > 0 {
+		subjects = append(subjects, "PK")
+	}
+	if lbiInt > 0 {
+		subjects = append(subjects, "LBI")
+	}
+	if lbeInt > 0 {
+		subjects = append(subjects, "LBE")
+	}
+	if pmInt > 0 {
+		subjects = append(subjects, "PM")
+	}
+
+	subjectsJSON, err := json.Marshal(subjects)
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "failed to encode subjects",
+		})
+	}
+
 	packet := models.T_Paket{
 		Nama_Paket: name,
+		Deskripsi:  deskripsi,
 		Total:      totalInt,
 		Active:     activeInt,
 		Price:      priceInt,
@@ -110,6 +149,7 @@ func CreatePacket(ctx *fiber.Ctx) error {
 		Lbi:        lbiInt,
 		Lbe:        lbeInt,
 		Pm:         pmInt,
+		Subjects:   string(subjectsJSON),
 	}
 
 	fmt.Println("Saving to DB:", packet)
@@ -120,17 +160,33 @@ func CreatePacket(ctx *fiber.Ctx) error {
 }
 
 func IndexPacket(ctx *fiber.Ctx) error {
-	var packet []models.T_Paket
+	var packets []models.T_Paket
 
-	database.DB.Find(&packet)
+	database.DB.Find(&packets)
 
-	if len(packet) == 0 {
+	if len(packets) == 0 {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Packet not found",
 		})
 	}
 
-	return ctx.JSON(packet)
+	var response []fiber.Map
+    for _, packet := range packets {
+        var subjects []string
+        if err := json.Unmarshal([]byte(packet.Subjects), &subjects); err != nil {
+            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+                "message": "Failed to decode subjects",
+            })
+        }
+        response = append(response, fiber.Map{
+            "id":         packet.ID,
+            "nama_paket": packet.Nama_Paket,
+            "price":      packet.Price,
+            "subjects":   subjects,
+            "deskripsi":  packet.Deskripsi,
+        })
+    }
+	return ctx.JSON(response)
 }
 
 func ShowPacket(ctx *fiber.Ctx) error {
@@ -146,15 +202,25 @@ func ShowPacket(ctx *fiber.Ctx) error {
 
 	var packet models.T_Paket
 
-	database.DB.Where("id = ?", packetID).First(&packet)
+	result := database.DB.First(&packet, packetID)
 
-	if packetID != int(packet.ID) {
+	if result.Error != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Packet not found",
 		})
 	}
 
-	return ctx.JSON(packet)
+	var subjects []string
+	if err := json.Unmarshal([]byte(packet.Subjects), &subjects); err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to decode subjects",
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"packet":   packet,
+		"subjects": subjects,
+	})
 }
 
 func UpdatePacket(ctx *fiber.Ctx) error {
@@ -180,6 +246,13 @@ func UpdatePacket(ctx *fiber.Ctx) error {
 
 	name := ctx.FormValue("name")
 	if name == "" {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "name is required",
+		})
+	}
+
+	deskripsi := ctx.FormValue("deskripsi")
+	if deskripsi == "" {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "name is required",
 		})

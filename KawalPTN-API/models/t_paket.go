@@ -19,6 +19,8 @@ type T_Paket struct {
 	Lbi        int       `json:"lbi" gorm:"not null"`
 	Lbe        int       `json:"lbe" gorm:"not null"`
 	Pm         int       `json:"pm" gorm:"not null"`
+	Deskripsi  string    `json:"deskripsi" gorm:"not null"`
+	Subjects   string    `json:"subjects" gorm:"not null"`
 	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
 }

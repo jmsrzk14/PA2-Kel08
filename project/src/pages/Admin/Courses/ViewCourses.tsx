@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 const LihatPaket = () => {
   const { id } = useParams();
   const [namaPaket, setNamaPaket] = useState('');
+  const [deskripsi, setDeskripsi] = useState('');
   const [total, setTotal] = useState(0);
   const [active, setActive] = useState(0);
   const [price, setPrice] = useState(0);
@@ -25,19 +26,20 @@ const LihatPaket = () => {
         const response = await fetch(`http://127.0.0.1:8000/admin/viewPacket/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
-        console.log("Data dari API:", data);
+        const packet = data.packet;
 
-        setNamaPaket(data.nama_paket);
-        setTotal(data.total);
-        setActive(data.active);
-        setPrice(data.price);
-        setPu(data.pu);
-        setPpu(data.ppu);
-        setPbm(data.pbm);
-        setPk(data.pk);
-        setLbi(data.lbi);
-        setLbe(data.lbe);
-        setPm(data.pm);
+        setNamaPaket(packet.nama_paket);
+        setDeskripsi(packet.deskripsi);
+        setTotal(packet.total);
+        setActive(packet.active);
+        setPrice(packet.price);
+        setPu(packet.pu);
+        setPpu(packet.ppu);
+        setPbm(packet.pbm);
+        setPk(packet.pk);
+        setLbi(packet.lbi);
+        setLbe(packet.lbe);
+        setPm(packet.pm);
       } catch (error) {
         console.error("Error fetching paket:", error);
         setError('Gagal memuat data. Silakan coba lagi.');
@@ -59,9 +61,10 @@ const LihatPaket = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Detail Paket TryOut</h1>
       <div className="bg-gray-100 p-4 rounded-md space-y-4">
         <p><strong>Nama Paket:</strong> {namaPaket}</p>
+        <p><strong>Deskripsi Paket:</strong> {deskripsi}</p>
         <p><strong>Total:</strong> {total}</p>
         <p><strong>Active:</strong> {active}</p>
-        <p><strong>Harga:</strong> Rp {price.toLocaleString('id-ID')}</p>
+        <p><strong>Harga:</strong> Rp {typeof price === 'number' ? price.toLocaleString('id-ID') : 'Tidak tersedia'}</p>
         <div className='mt-20 space-y-3'>
           <h5 className="text-xl font-bold">Detail Jumlah Soal</h5>
           <p><strong>Penalaran Umum:</strong> {pu}</p>

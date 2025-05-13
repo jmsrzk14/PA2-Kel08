@@ -13,8 +13,8 @@ type CoursePackage = {
     features?: string[];
     isPopular?: boolean;
     participants?: number;
-    subjects?: string[];
-    description?: string;
+    subjects: string[];
+    deskripsi?: string;
 };
 
 declare global {
@@ -29,22 +29,22 @@ const TryoutPackageCard = ({
     nama_paket = "",
     price = 0,
     duration = "",
-    features = [""],
+    // features = [""],
     isPopular = false,
     participants = 0,
-    subjects = [""],
-    description = ""
+    subjects = [],
+    deskripsi = ""
 }: {
     id: number;
     order_id?: string;
     nama_paket?: string;
     price?: number;
     duration?: string;
-    features?: string[];
+    // features?: string[];
     isPopular?: boolean;
     participants?: number;
     subjects?: string[];
-    description?: string;
+    deskripsi?: string;
 }) => {
     const [isPaymentOpen, setPaymentOpen] = useState(false);
     const [paymentMessage, setPaymentMessage] = useState("");
@@ -183,9 +183,9 @@ const TryoutPackageCard = ({
 
             <Modal isOpen={isOpenModal} onRequestClose={closeModal}
                 className="fixed inset-0 flex items-center justify-center" contentLabel="Detail Paket">
-                <div className='bg-white rounded-md p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-lg border border-gray-200'>
+                <div className='bg-white rounded-md p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto shadow-lg border border-gray-200 hover:border-teal-500 transition-all duration-300'>
                     <div className='flex justify-between items-center mb-4'>
-                        <h2 className='text-xl font-bold text-gray-800'>Detail {nama_paket}</h2>
+                        <h2 className='text-xl font-bold text-gray-800'>Detail Paket {nama_paket}</h2>
                         <button onClick={closeModal} className='text-gray-500 hover:text-red-500'>
                             <X size={20} />
                         </button>
@@ -193,10 +193,10 @@ const TryoutPackageCard = ({
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Deskripsi</h3>
-                        <p className='text-gray-600'>{description}</p>
+                        <p className='text-gray-600'>{deskripsi}</p>
                     </div>
 
-                    <div className='mb-6'>
+                    {/* <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Fitur Paket</h3>
                         <ul className="space-y-3 mb-6">
                             {features.map((feature, index) => (
@@ -208,37 +208,41 @@ const TryoutPackageCard = ({
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Mata Pelajaran</h3>
-                        <div className="flex flex-wrap gap-2">
-                            {subjects.map((subject, index) => (
-                                <span
-                                    key={index}
-                                    className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm border border-gray-200"
-                                >
-                                    {subject}
-                                </span>
-                            ))}
-                        </div>
+                        {Array.isArray(subjects) && subjects.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                                {subjects.map((subject, index) => (
+                                    <span
+                                        key={index}
+                                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm shadow-lg border border-blue-500 shadow-md hover:shadow-blue-500 transition-all duration-300"
+                                    >
+                                        {subject}
+                                    </span>
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-gray-600">Tidak ada mata pelajaran tersedia.</p>
+                        )}
                     </div>
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Statistik</h3>
                         <div className="flex gap-4 mb-6">
-                            <div className="flex items-center gap-1 text-gray-600">
+                            {/* <div className="flex items-center gap-1 text-gray-600">
                                 <Users size={16} />
                                 <span>{participants.toLocaleString()} peserta</span>
-                            </div>
+                            </div> */}
                             <div className="flex items-center gap-1 text-gray-600">
                                 <BookOpen size={16} />
-                                <span>{subjects.length} mata pelajaran</span>
+                                <span>{subjects.length} teori yang diujikan</span>
                             </div>
                         </div>
                     </div>
                     <button
-                        className="w-full py-2 px-4 bg-teal-500 text-white rounded-md font-medium hover:bg-teal-600 transition-all duration-300"
+                        className="w-full py-2 px-4 bg-teal-500 text-white rounded-xl font-medium hover:bg-teal-600 shadow-lg hover:shadow-teal-600 transition-all duration-300"
                         onClick={closeModal}>
                         Tutup
                     </button>
@@ -435,11 +439,11 @@ export default function Guest() {
                                         id={pkg.id}
                                         nama_paket={pkg.nama_paket}
                                         price={pkg.price}
-                                        duration="6 bulan"
-                                        features={["Akses Tryout Online", "Bank Soal", "Konsultasi"]}
-                                        subjects={["Matematika", "Bahasa Indonesia", "Bahasa Inggris"]}
+                                        // duration="6 bulan"
+                                        // features={["Akses Tryout Online", "Bank Soal", "Konsultasi"]}
+                                        subjects={pkg.subjects}
                                         participants={1500}
-                                        description="Paket tryout untuk persiapan ujian masuk perguruan tinggi negeri."
+                                        deskripsi={pkg.deskripsi}
                                     />
                                 ))}
                             </div>
