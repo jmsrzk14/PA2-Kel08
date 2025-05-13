@@ -5,6 +5,7 @@ import (
 	"KawalPTN-API/models"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -77,97 +78,27 @@ func IndexCapacity(ctx *fiber.Ctx) error {
 	return ctx.JSON(capacities)
 }
 
-func ShowCapacity(ctx *fiber.Ctx) error {
-	CapacityIDStr := ctx.Params("id")
+func ShowCapacityByYear(ctx *fiber.Ctx) error {
+	ProdiID := ctx.Params("id_prodi")
+	Year := time.Now().Year()
 
-	packetID, err := strconv.Atoi(CapacityIDStr)
+	var capacities []models.T_Daya_Tampung_Prodi
 
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid packet ID",
-		})
-	}
+	result := database.DB.Where("prodi_id = ? AND tahun = ?", ProdiID, Year).Find(&capacities)
 
-	var packet models.T_Paket
-
-	database.DB.Where("id = ?", packetID).First(&packet)
-
-	if packetID != int(packet.ID) {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Capacity not found",
-		})
-	}
-
-	return ctx.JSON(packet)
-}
-
-func UpdateCapacity(ctx *fiber.Ctx) error {
-	packetIDStr := ctx.Params("id")
-
-	packetID, err := strconv.Atoi(packetIDStr)
-
-	if err != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Invalid packet ID",
-		})
-	}
-
-	var packet models.T_Paket
-
-	database.DB.Where("id = ?", packetID).First(&packet)
-
-	if packetID != int(packet.ID) {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "capacity not found",
-		})
-	}
-
-	name := ctx.FormValue("name")
-	if name == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "name is required",
-		})
-	}
-
-	total := ctx.FormValue("total")
-	totalInt, err := strconv.Atoi(total)
-	if total == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "total is required",
-		})
-	}
-
-	active := ctx.FormValue("active")
-	activeInt, err := strconv.Atoi(active)
-	if active == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "active is required",
-		})
-	}
-
-	price := ctx.FormValue("price")
-	priceInt, err := strconv.Atoi(price)
-	if price == "" {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "price is required",
-		})
-	}
-
-	result := database.DB.Model(&packet).Updates(models.T_Paket{
-		Nama_Paket: name,
-		Total:      totalInt,
-		Active:     activeInt,
-		Price:      priceInt,
-	})
 	if result.Error != nil {
-		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Error Updating",
-			"error":   result.Error.Error(),
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal mengambil data kapasitas",
 		})
 	}
 
-	return ctx.JSON(packet)
+	if len(capacities) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada kapasitas ditemukan untuk prodi ini",
+		})
+	}
 
+	return ctx.JSON(capacities)
 }
 
 func DeleteCapacity(ctx *fiber.Ctx) error {

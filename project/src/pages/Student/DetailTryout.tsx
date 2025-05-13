@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from 'axios';
+import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 
 const DetailTryout = () => {
   const navigate = useNavigate();
@@ -11,7 +12,70 @@ const DetailTryout = () => {
   const [error, setError] = useState("");
   const [idUsers, setIdUsers] = useState('');
   const [namaUsers, setNamaUsers] = useState('');
+  const [nisn, setNisn] = useState('');
+  const [idSekolah, setIdSekolah] = useState('');
+  const [namaSekolah, setNamaSekolah] = useState('');
+  const [noUtbk, setNoUtbk] = useState('');
+  const [kelompokUjian, setKelompokUjian] = useState('');
   const [namaPaket, setNamaPaket] = useState('');
+
+  const generatePDF = async () => {
+    try {
+      const res = await fetch('/template.pdf');
+      if (!res.ok) throw new Error('Gagal memuat template PDF');
+      const existingPdfBytes = await res.arrayBuffer();
+      const pdfDoc = await PDFDocument.load(existingPdfBytes);
+      const pages = pdfDoc.getPages();
+      const firstPage = pages[0];
+
+      const font = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+      const drawText = (text: string | number, x: number, y: number) => {
+        firstPage.drawText(String(text), {
+          x,
+          y,
+          size: 17,
+          font,
+          color: rgb(0, 0, 0)
+        });
+      };
+
+      const scoreText = (text: string | number, x: number, y: number) => {
+        firstPage.drawText(String(text), {
+          x,
+          y,
+          size: 12,
+          font,
+          color: rgb(0, 0, 0)
+        });
+      };
+
+      drawText(namaUsers, 320, 400.5);         
+      drawText(nisn, 320, 371);        
+      drawText(namaSekolah, 320, 342.5);        
+      drawText(noUtbk, 320, 314);          
+      drawText(kelompokUjian, 320, 285.5);
+      drawText(namaPaket, 411, 240);
+
+      const nilaiMap = Object.fromEntries(data.map(d => [d.jenis, d.nilai]));
+      scoreText(`${nilaiMap["Penalaran Umum"]}`, 761, 178);
+      scoreText(`${nilaiMap["Pengetahuan & Pemahaman Umum"]}`, 761, 156);
+      scoreText(`${nilaiMap["Pemahaman Bacaan & Menulis"]}`, 761, 131);
+      scoreText(`${nilaiMap["Pengetahuan Kuantitatif"]}`, 761, 108.5);
+      scoreText(`${nilaiMap["Literasi Bahasa Indonesia"]}`, 761, 83.5);
+      scoreText(`${nilaiMap["Literasi Bahasa Inggris"]}`, 761, 61);
+      scoreText(`${nilaiMap["Penalaran Matematika"]}`, 761, 35.6);
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = `Sertifikat_Tryout_${namaUsers}.pdf`;
+      link.click();
+    } catch (error) {
+      console.error('Gagal membuat PDF:', error);
+      setError('Gagal membuat sertifikat.');
+    }
+  };
 
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -25,6 +89,10 @@ const DetailTryout = () => {
         const data = response.data;
         setIdUsers(data.data.id);
         setNamaUsers(data.data.first_name);
+        setNisn(data.data.nisn);
+        setIdSekolah(data.data.asal_sekolah);
+        setNoUtbk(data.data.no_utbk);
+        setKelompokUjian(data.data.kelompok_ujian)
       } catch (error) {
         console.error("Error fetching data:", error);
         setError('Gagal memuat data. Silakan coba lagi.');
@@ -34,6 +102,27 @@ const DetailTryout = () => {
     };
     fetchAdmin();
   }, []);
+
+  useEffect(() => {
+    const fetchSekolah = async () => {
+      setLoading(true);
+      setError('');
+      try {
+        const response = await axios.get(`http://localhost:8000/admin/viewSekolah/${idSekolah}`);
+        const data = response.data;
+        setNamaSekolah(data.sekolah);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setError('Gagal memuat data. Silakan coba lagi.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (idSekolah) {
+      fetchSekolah();
+    }
+  }, [idSekolah]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,7 +175,15 @@ const DetailTryout = () => {
 
   return (
     <div className="mx-auto p-6 rounded">
-      <h2 className="text-lg font-bold mb-4 text-gray-800">Detail Nilai {namaPaket}</h2>
+      <div className="flex justify-between ml-4 mr-4">
+        <h2 className="text-lg font-bold mb-4 text-gray-800">Detail Nilai {namaPaket}</h2>
+        <button
+          className="ml-4 px-3 py-1 bg-green-600 text-white rounded hover:bg-green-700"
+          onClick={generatePDF}
+        >
+          Unduh Sertifikat
+        </button>
+      </div>
 
       {error && <p className="text-red-500 mb-4">{error}</p>}
 

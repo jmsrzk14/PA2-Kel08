@@ -5,6 +5,7 @@ import (
 	"KawalPTN-API/models"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -190,12 +191,12 @@ func ShowScorePacket(ctx *fiber.Ctx) error {
 		var packet struct {
 			NamaPaket string `json:"nama_paket"`
 		}
-	
+
 		err = database.DB.Table("t_pakets").
 			Select("nama_paket").
 			Where("id = ?", score.Id_Paket).
 			First(&packet).Error
-	
+
 		if err != nil {
 			packet.NamaPaket = "-"
 		}
@@ -220,19 +221,405 @@ func ShowScorePacket(ctx *fiber.Ctx) error {
 }
 
 func GetScoreByTahunUserPaket(ctx *fiber.Ctx) error {
-    tahun := ctx.Params("tahun")
-    idUsers := ctx.Params("id_users")
-    idPaket := ctx.Params("id_paket")
+	tahun := ctx.Params("tahun")
+	idUsers := ctx.Params("id_users")
+	idPaket := ctx.Params("id_paket")
 
-    var score[] models.T_Nilai
-	fmt.Println(tahun, idUsers, idPaket)
-    result := database.DB.Where("year = ? AND id_siswa = ? AND id_paket = ?", tahun, idUsers, idPaket).First(&score)
+	var score []models.T_Nilai
+	result := database.DB.Where("year = ? AND id_siswa = ? AND id_paket = ?", tahun, idUsers, idPaket).First(&score)
 
-    if result.Error != nil {
-        return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-            "error": "Data tidak ditemukan untuk kombinasi tahun, user, dan paket tersebut",
-        })
-    }
+	if result.Error != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "Data tidak ditemukan untuk kombinasi tahun, user, dan paket tersebut",
+		})
+	}
 
-    return ctx.JSON(score)
+	return ctx.JSON(score)
+}
+
+func ShowScoreByYear(ctx *fiber.Ctx) error {
+	idSiswa := ctx.Params("id_siswa")
+	Year := time.Now().Year()
+
+	var scores []models.T_Nilai
+
+	result := database.DB.Where("year = ? AND id_siswa = ?", Year, idSiswa).First(&scores)
+
+	if result.Error != nil {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"error": "Data tidak ditemukan untuk kombinasi tahun, user, dan paket tersebut",
+		})
+	}
+
+	return ctx.JSON(scores)
+}
+
+type SiswaResponse struct {
+	ID                   uint   `json:"id"`
+	Nama                 string `json:"nama"`
+	Pilihan1_UTBK        string `json:"pilihan1_utbk"`
+	Pilihan2_UTBK        string `json:"pilihan2_utbk"`
+	Pilihan1_UTBK_Aktual string `json:"pilihan1_utbk_aktual"`
+	Pilihan2_UTBK_Aktual string `json:"pilihan2_utbk_aktual"`
+}
+
+type NilaiResponse struct {
+	ID       uint `json:"id"`
+	Id_Siswa uint `json:"id_siswa"`
+	Total    int  `json:"total"`
+}
+
+func ShowScoreByTotal1(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan1_utbk = ?", idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Select("id, id_siswa, total").
+		Where("id_siswa IN ?", ids).
+		Order("total DESC").
+		Find(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
+}
+
+func ShowScoreByTotal2(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan2_utbk = ?", idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Select("id, id_siswa, total").
+		Where("id_siswa IN ?", ids).
+		Order("total DESC").
+		Find(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
+}
+
+func ShowScoreByTotal3(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan1_utbk_aktual = ?", idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Select("id, id_siswa, total").
+		Where("id_siswa IN ?", ids).
+		Order("total DESC").
+		Find(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
+}
+
+func ShowScoreByTotal4(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan2_utbk_aktual = ?", idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Select("id, id_siswa, total").
+		Where("id_siswa IN ?", ids).
+		Order("total DESC").
+		Find(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
+}
+
+func ShowScoreByTotalAll(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan1_utbk = ? OR pilihan2_utbk = ? OR pilihan1_utbk_aktual = ? OR pilihan2_utbk_aktual = ?", idProdi, idProdi, idProdi, idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Select("id, id_siswa, total").
+		Where("id_siswa IN ?", ids).
+		Order("total DESC").
+		Find(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
 }

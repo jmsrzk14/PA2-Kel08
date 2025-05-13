@@ -44,8 +44,14 @@ func Setup(app *fiber.App) {
 
 	admin.Post("/createScore", controllers.CreateScore)
 	admin.Get("/viewScore/:id_siswa", controllers.ShowScore)
+	admin.Get("/viewScoreYear/:id_siswa", controllers.ShowScoreByYear)
 	admin.Get("/viewScorePacket/:id_siswa", controllers.ShowScorePacket)
 	admin.Get("/viewScoreDetail/:tahun/:id_users/:id_paket", controllers.GetScoreByTahunUserPaket)
+	admin.Get("/listScoreHigh/1/:id_prodi", controllers.ShowScoreByTotal1)
+	admin.Get("/listScoreHigh/2/:id_prodi", controllers.ShowScoreByTotal2)
+	admin.Get("/listScoreHigh/3/:id_prodi", controllers.ShowScoreByTotal3)
+	admin.Get("/listScoreHigh/4/:id_prodi", controllers.ShowScoreByTotal4)
+	admin.Get("/listScoreHighAll/:id_prodi", controllers.ShowScoreByTotalAll)
 
 	admin.Post("/createAnnouncement", controllers.CreateAnnouncement)
 	admin.Get("/listAnnouncement", controllers.IndexAnnouncement)
@@ -66,6 +72,7 @@ func Setup(app *fiber.App) {
 
 	admin.Post("/createCapacity", controllers.CreateCapacity)
 	admin.Get("/listCapacity/:id_prodi", controllers.IndexCapacity)
+	admin.Get("/viewCapacity/:id_prodi", controllers.ShowCapacityByYear)
 	admin.Delete("/listCapacity/:id", controllers.DeleteCapacity)
 
 	admin.Get("/region/province", controllers.IndexProvince)

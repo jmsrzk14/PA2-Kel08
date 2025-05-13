@@ -48,7 +48,6 @@ const Navbar: React.FC = () => {
         });
 
         const data = response.data;
-        console.log("Data dari API:", data);
 
         setIdStudent(data.data.id);
         setNama(data.data.first_name);

@@ -191,7 +191,7 @@ func Profile(ctx *fiber.Ctx) error {
 		})
 	}
 
-	userID, ok := claims["user_id"].(float64) // NOTE: jwt-go parse angka sebagai float64
+	userID, ok := claims["user_id"].(float64)
 	if !ok {
 		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "unauthenticated (user_id missing)",
@@ -201,7 +201,7 @@ func Profile(ctx *fiber.Ctx) error {
 	var student models.T_Siswa
 	if err := database.DB.Raw(`
 		SELECT 
-			id, username, nisn, first_name, asal_sekolah, kelompok_ujian, 
+			id, username, nisn, no_utbk, first_name, asal_sekolah, kelompok_ujian, 
 			telp1, pilihan1_utbk, pilihan2_utbk, 
 			pilihan1_utbk_aktual, pilihan2_utbk_aktual 
 		FROM t_siswas 
