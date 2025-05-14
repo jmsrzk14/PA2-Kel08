@@ -16,6 +16,7 @@ type T_Siswa struct {
 	Last_Name      *string     `json:"last_name" gorm:"default:null"`
 	Asal_Sekolah   *uint       `json:"asal_sekolah"`
 	Sekolah_Sma    Sekolah_Sma `gorm:"foreignKey:Asal_Sekolah;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;" json:"sekolah_sma"`
+	Foto           *string     `json:"foto" gorm:"type:varchar(255);default:null"`
 	Kelompok_Ujian string      `json:"kelompok_ujian" gorm:"type:enum('SAINTEK', 'SOSHUM', 'CAMPURAN');not null" validate:"required,oneof=SAINTEK SOSHUM CAMPURAN"`
 	Kelas          *string     `json:"kelas" gorm:"default:null"`
 	Grade          *string     `json:"grade" gorm:"type:enum('A', 'B', 'C', 'LULUS', 'SUPERINTENSIF', 'TIDAK TES');default:'TIDAK TES'" validate:"required,oneof=A B C LULUS SUPERINTENSIF TIDAK TES"`

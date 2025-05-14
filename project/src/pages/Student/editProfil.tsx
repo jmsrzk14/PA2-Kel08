@@ -13,6 +13,7 @@ function EditProfil() {
         username: "",
         first_name: "",
         nisn: "",
+        foto: "",
         asal_sekolah: "",
         kelompok_ujian: "",
         telp1: "",
@@ -31,6 +32,7 @@ function EditProfil() {
     const [editForm, setEditForm] = useState({
         first_name: "",
         nisn: "",
+        foto: "",
         asal_sekolah: "",
         kelompok_ujian: "",
         telp1: "",
@@ -60,6 +62,15 @@ function EditProfil() {
     const [majorList2, setMajorList2] = useState<{ id_prodi: string; nama_prodi:string }[]>([]);
     const [majorList3, setMajorList3] = useState<{ id_prodi: string; nama_prodi:string }[]>([]);
     const [majorList4, setMajorList4] = useState<{ id_prodi: string; nama_prodi:string }[]>([]);
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setSelectedFile(file);
+        };
+    };
 
     useEffect(() => {
         const fetchWilayah = async () => {
@@ -279,6 +290,7 @@ function EditProfil() {
                     username: data.username || "",
                     first_name: data.first_name || "",
                     nisn: data.nisn || "",
+                    foto: data.foto || "",
                     asal_sekolah: data.asal_sekolah || "",
                     kelompok_ujian: data.kelompok_ujian || "",
                     telp1: data.telp1 || "",
@@ -291,6 +303,7 @@ function EditProfil() {
                 setEditForm({
                     first_name: data.first_name || "",
                     nisn: data.nisn || "",
+                    foto: data.foto || "",
                     asal_sekolah: data.asal_sekolah || "",
                     kelompok_ujian: data.kelompok_ujian || "",
                     telp1: data.telp1 || "",
@@ -375,43 +388,86 @@ function EditProfil() {
     const handleSaveEdit = async () => {
         try {
             const params = new URLSearchParams();
-            Object.entries(editForm).forEach(([key, value]) => {
-                params.append(key, value);
-            });
-    
-            console.log(params.toString());
-            console.log(studentData.id);
-            
-            await axios.put(
-                `http://localhost:8000/student/update/${studentData.id}`,
-                params.toString(),
-                {
-                    withCredentials: true,
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                    },
-                }
-            );
-    
-            setStudentData((prev) => ({
-                ...prev,
-                ...editForm,
-            }));
-    
-            setError("");
-            Swal.fire({
-                title: 'Berhasil!',
-                text: 'Data Profil Berhasil Diperbaharui.',
-                icon: 'success',
-                confirmButtonColor: '#3085d6',
-            }).then(() => {
-                navigate("/dashboard/student/profil")
-            });
+
+            if (selectedFile) {
+                const reader = new FileReader();
+                reader.readAsDataURL(selectedFile);
+
+                reader.onloadend = () => {
+                    params.append("foto", reader.result as string);
+
+                    Object.entries(editForm).forEach(([key, value]) => {
+                        params.append(key, value);
+                    });
+
+                    axios.put(
+                        `http://localhost:8000/student/update/${studentData.id}`,
+                        params.toString(),
+                        {
+                            withCredentials: true,
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded",
+                            },
+                        }
+                    ).then(() => {
+                        setStudentData((prev) => ({
+                            ...prev,
+                            ...editForm,
+                        }));
+
+                        setError("");
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Data Profil Berhasil Diperbaharui.',
+                            icon: 'success',
+                            confirmButtonColor: '#3085d6',
+                        }).then(() => {
+                            navigate("/dashboard/student/profil")
+                        });
+                    }).catch((error: any) => {
+                        console.error("Error updating profile:", error);
+                        setError("Gagal memperbarui profil. Silakan coba lagi.");
+                    });
+                };
+            } else {
+                // Jika tidak ada foto yang dipilih, kirim data tanpa foto
+                Object.entries(editForm).forEach(([key, value]) => {
+                    params.append(key, value);
+                });
+
+                // Kirim data tanpa foto
+                await axios.put(
+                    `http://localhost:8000/student/update/${studentData.id}`,
+                    params.toString(),
+                    {
+                        withCredentials: true,
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded",
+                        },
+                    }
+                );
+
+                setStudentData((prev) => ({
+                    ...prev,
+                    ...editForm,
+                }));
+
+                setError("");
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: 'Data Profil Berhasil Diperbaharui.',
+                    icon: 'success',
+                    confirmButtonColor: '#3085d6',
+                }).then(() => {
+                    navigate("/dashboard/student/profil")
+                });
+            }
+
         } catch (error: any) {
             console.error("Error updating profile:", error);
             setError("Gagal memperbarui profil. Silakan coba lagi.");
         }
-    };    
+    };
 
     const handleEditFormChange = (field: string, value: string) => {
         setEditForm((prev) => ({
@@ -460,6 +516,21 @@ function EditProfil() {
                                 value={editForm.nisn}
                                 onChange={(e) => handleEditFormChange("nisn", e.target.value)}
                             />
+                        </div>
+
+                        <div className="flex items-center">
+                            <label className="w-1/4 font-semibold">Foto Profil</label>
+                            <div className="w-3/4 flex items-center gap-2 relative">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                    className="border p-1 rounded w-full z-10 opacity-0 cursor-pointer"
+                                />
+                                <div className="w-3/4 absolute rounded text-gray-500 pointer-events-none border p-1">
+                                    Pilih foto profil...
+                                </div>
+                            </div>
                         </div>
     
                         {/* Provinsi */}

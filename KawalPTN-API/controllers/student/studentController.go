@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"encoding/base64"
+    "os"
+	"path/filepath"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-playground/validator/v10"
@@ -93,13 +96,6 @@ func Login(ctx *fiber.Ctx) error {
 		})
 	}
 
-	// if err := bcrypt.CompareHashAndPassword([]byte(student.Password), []byte(data["password"])); err != nil {
-	// 	ctx.Status(fiber.StatusBadRequest)
-	// 	return ctx.JSON(fiber.Map{
-	// 		"message": "incorrect password",
-	// 	})
-	// }
-
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"user_id": student.ID,
 		"exp":     time.Now().Add(time.Minute * 30).Unix(),
@@ -146,6 +142,42 @@ func UpdateStudent(ctx *fiber.Ctx) error {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid input",
 		})
+	}
+
+	base64Image := ctx.FormValue("foto")
+	if base64Image != "" && strings.HasPrefix(base64Image, "data:image") {
+		parts := strings.SplitN(base64Image, ",", 2)
+		if len(parts) == 2 {
+			imageData := parts[1]
+
+			decodedImage, err := base64.StdEncoding.DecodeString(imageData)
+			if err != nil {
+				return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+					"message": "Failed to decode base64 image",
+				})
+			}
+
+			saveDir := "./public"
+			if _, err := os.Stat(saveDir); os.IsNotExist(err) {
+				err = os.MkdirAll(saveDir, 0755)
+				if err != nil {
+					return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+						"message": "Failed to create upload directory",
+					})
+				}
+			}
+
+			filePath := fmt.Sprintf("siswa/siswa_%s.jpg", id) 
+			fullPath := filepath.Join(saveDir, filePath)
+			err = os.WriteFile(fullPath, decodedImage, 0644)
+			if err != nil {
+				return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+					"message": "Failed to save image file",
+				})
+			}
+
+			data.Foto = &filePath
+		}
 	}
 
 	if err := database.DB.Model(&models.T_Siswa{}).
@@ -201,7 +233,7 @@ func Profile(ctx *fiber.Ctx) error {
 	var student models.T_Siswa
 	if err := database.DB.Raw(`
 		SELECT 
-			id, username, nisn, no_utbk, first_name, asal_sekolah, kelompok_ujian, 
+			id, username, nisn, foto, no_utbk, first_name, asal_sekolah, kelompok_ujian, 
 			telp1, pilihan1_utbk, pilihan2_utbk, 
 			pilihan1_utbk_aktual, pilihan2_utbk_aktual 
 		FROM t_siswas 

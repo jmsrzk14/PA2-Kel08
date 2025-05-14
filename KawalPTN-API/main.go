@@ -21,6 +21,8 @@ func main() {
 		AllowCredentials: true,
     }))
 
+	app.Static("/", "./public")
+
 	routes.Setup(app)
 
 	err := app.Listen("localhost:8000")

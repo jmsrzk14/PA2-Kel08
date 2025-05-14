@@ -18,6 +18,7 @@ const DetailTryout = () => {
   const [noUtbk, setNoUtbk] = useState('');
   const [kelompokUjian, setKelompokUjian] = useState('');
   const [namaPaket, setNamaPaket] = useState('');
+  const [foto, setFoto] = useState('');
 
   const generatePDF = async () => {
     try {
@@ -49,21 +50,42 @@ const DetailTryout = () => {
         });
       };
 
-      drawText(namaUsers, 320, 400.5);         
-      drawText(nisn, 320, 371);        
-      drawText(namaSekolah, 320, 342.5);        
-      drawText(noUtbk, 320, 314);          
+      drawText(namaUsers, 320, 400.5);
+      drawText(nisn, 320, 371);
+      drawText(namaSekolah, 320, 342.5);
+      drawText(noUtbk, 320, 314);
       drawText(kelompokUjian, 320, 285.5);
-      drawText(namaPaket, 411, 240);
+      drawText(namaPaket, 415, 240);
 
       const nilaiMap = Object.fromEntries(data.map(d => [d.jenis, d.nilai]));
-      scoreText(`${nilaiMap["Penalaran Umum"]}`, 761, 178);
-      scoreText(`${nilaiMap["Pengetahuan & Pemahaman Umum"]}`, 761, 156);
-      scoreText(`${nilaiMap["Pemahaman Bacaan & Menulis"]}`, 761, 131);
-      scoreText(`${nilaiMap["Pengetahuan Kuantitatif"]}`, 761, 108.5);
-      scoreText(`${nilaiMap["Literasi Bahasa Indonesia"]}`, 761, 83.5);
-      scoreText(`${nilaiMap["Literasi Bahasa Inggris"]}`, 761, 61);
-      scoreText(`${nilaiMap["Penalaran Matematika"]}`, 761, 35.6);
+      scoreText(`${nilaiMap["Penalaran Umum"]}`, 675, 178);
+      scoreText(`${nilaiMap["Pengetahuan & Pemahaman Umum"]}`, 675, 156);
+      scoreText(`${nilaiMap["Pemahaman Bacaan & Menulis"]}`, 675, 131);
+      scoreText(`${nilaiMap["Pengetahuan Kuantitatif"]}`, 675, 108.5);
+      scoreText(`${nilaiMap["Literasi Bahasa Indonesia"]}`, 675, 83.5);
+      scoreText(`${nilaiMap["Literasi Bahasa Inggris"]}`, 675, 61);
+      scoreText(`${nilaiMap["Penalaran Matematika"]}`, 675, 35.6);
+
+      const imagePath = `http://localhost:8000/${foto}`;
+      const imageRes = await fetch(imagePath);
+      
+      if (!imageRes.ok) throw new Error('Gagal mengunduh gambar');
+
+      const imageArrayBuffer = await imageRes.arrayBuffer();
+      
+      if (!imageArrayBuffer || imageArrayBuffer.byteLength === 0) {
+        throw new Error('Gambar yang diunduh rusak atau kosong');
+      }
+
+      const image = await pdfDoc.embedJpg(imageArrayBuffer);
+      const imageDims = image.scale(0.45);
+
+      firstPage.drawImage(image, {
+        x: 665,
+        y: 410.5 - imageDims.height, 
+        width: imageDims.width,
+        height: imageDims.height
+      });
 
       const pdfBytes = await pdfDoc.save();
       const blob = new Blob([pdfBytes], { type: 'application/pdf' });
@@ -76,6 +98,7 @@ const DetailTryout = () => {
       setError('Gagal membuat sertifikat.');
     }
   };
+
 
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -93,6 +116,7 @@ const DetailTryout = () => {
         setIdSekolah(data.data.asal_sekolah);
         setNoUtbk(data.data.no_utbk);
         setKelompokUjian(data.data.kelompok_ujian)
+        setFoto(data.data.foto)
       } catch (error) {
         console.error("Error fetching data:", error);
         setError('Gagal memuat data. Silakan coba lagi.');
