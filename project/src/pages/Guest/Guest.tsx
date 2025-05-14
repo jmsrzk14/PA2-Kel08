@@ -143,7 +143,7 @@ const TryoutPackageCard = ({
     };
 
     return (
-        <div className="w-full p-6 bg-white rounded-md shadow-md border border-gray-200 hover:border-blue-500 transition-all duration-300">
+        <div className="w-full p-6 bg-white rounded-md shadow-md border border-gray-200 hover:border-teal-500 transition-all duration-300">
             {isPopular && (
                 <div className="flex items-center gap-1 bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full w-fit mb-4">
                     <Star size={16} fill="currentColor" /> Popular
@@ -154,7 +154,7 @@ const TryoutPackageCard = ({
 
             <div className="mb-6">
                 <div className="flex items-end gap-2">
-                    <span className="text-xl font-bold text-blue-600">
+                    <span className="text-xl font-bold text-teal-600">
                         Rp {price.toLocaleString("id-ID")}
                     </span>
                 </div>
@@ -169,7 +169,7 @@ const TryoutPackageCard = ({
             <div className='space-y-3'>
                 <button
                     onClick={openModal}
-                    className="text-blue-600 border border-blue-600 rounded-md px-4 py-2 hover:bg-blue-50 mb-3 w-full text-center"
+                    className="text-teal-600 border border-teal-600 rounded-md px-4 py-2 hover:bg-teal-50 mb-3 w-full text-center"
                 >
                     Lihat Detail
                 </button>
@@ -217,7 +217,7 @@ const TryoutPackageCard = ({
                                 {subjects.map((subject, index) => (
                                     <span
                                         key={index}
-                                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm shadow-lg border border-blue-500 shadow-md hover:shadow-blue-500 transition-all duration-300"
+                                        className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm shadow-lg border border-teal-500 shadow-md hover:shadow-teal-500 transition-all duration-300"
                                     >
                                         {subject}
                                     </span>

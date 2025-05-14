@@ -30,7 +30,7 @@ const CoursesContent = () => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [filteredPackages, setFilteredPackages] = useState<Packages[]>([]);
+  const [filteredPackages, setFilteredPackages] = useState<CoursePackage[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -143,7 +143,7 @@ const CoursesContent = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            <TableCell colspan={4} align="center"><p className="text-red-500">Data tidak ditemukan!</p></TableCell>
+            <TableCell colSpan={4} align="center"><p className="text-red-500">Data tidak ditemukan!</p></TableCell>
           </TableBody>
         </Table>
       </TableContainer>
@@ -199,7 +199,7 @@ const CoursesContent = () => {
                   </TableRow>
                 ) : (
                   paginatedData.map((row, index) => (
-                    <TableRow hover tabIndex={-1} key={row.username}>
+                    <TableRow hover tabIndex={-1} key={row.id}>
                       <TableCell>{page * rowsPerPage + index + 1}</TableCell>
                       {columns.map((column) => (
                         <TableCell key={column.id} align="center">
