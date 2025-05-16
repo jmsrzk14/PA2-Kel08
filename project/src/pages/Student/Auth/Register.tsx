@@ -33,14 +33,21 @@ const Register: React.FC = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
     setErrors(prev => ({ ...prev, [name]: '' }));
 
-    if (name === 'confirmPassword' || name === 'password') {
-      const password = name === 'password' ? value : formData.password;
-      const confirmPassword = name === 'confirmPassword' ? value : formData.confirmPassword;
-
-      if (password && confirmPassword && password === confirmPassword) {
-        setErrors(prev => ({ ...prev, confirmPassword: '' }));
-      } else {
+    if (name === 'password') {
+      if (value.length < 8) {
+        setErrors(prev => ({ ...prev, password: 'Password minimal 8 karakter' }));
+      } else if (formData.confirmPassword && value !== formData.confirmPassword) {
         setErrors(prev => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
+      } else {
+        setErrors(prev => ({ ...prev, password: '', confirmPassword: '' }));
+      }
+    }
+
+    if (name === 'confirmPassword') {
+      if (value !== formData.password) {
+        setErrors(prev => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
+      } else {
+        setErrors(prev => ({ ...prev, confirmPassword: '' }));
       }
     }
   };
