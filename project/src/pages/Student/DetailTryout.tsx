@@ -78,13 +78,14 @@ const DetailTryout = () => {
       }
 
       const image = await pdfDoc.embedJpg(imageArrayBuffer);
-      const imageDims = image.scale(0.45);
+      const imageWidth = 100;
+      const imageHeight = 130;
 
       firstPage.drawImage(image, {
         x: 665,
-        y: 410.5 - imageDims.height, 
-        width: imageDims.width,
-        height: imageDims.height
+        y: 410.5 - imageHeight,
+        width: imageWidth,
+        height: imageHeight
       });
 
       const pdfBytes = await pdfDoc.save();

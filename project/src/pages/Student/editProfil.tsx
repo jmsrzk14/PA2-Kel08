@@ -525,11 +525,8 @@ function EditProfil() {
                                     type="file"
                                     accept="image/*"
                                     onChange={handleFileChange}
-                                    className="border p-1 rounded w-full z-10 opacity-0 cursor-pointer"
+                                    className="border p-1 rounded w-full z-10 cursor-pointer"
                                 />
-                                <div className="w-3/4 absolute rounded text-gray-500 pointer-events-none border p-1">
-                                    Pilih foto profil...
-                                </div>
                             </div>
                         </div>
     

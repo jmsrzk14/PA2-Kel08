@@ -184,8 +184,8 @@ const TambahSekolah = () => {
             required
           >
             <option value="">Pilih Status</option>
-            <option value="S">S</option>
-            <option value="N">N</option>
+            <option value="S">Swasta</option>
+            <option value="N">Negeri</option>
           </select>
         </div>
         <button

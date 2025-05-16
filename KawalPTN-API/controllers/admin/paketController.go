@@ -165,9 +165,7 @@ func IndexPacket(ctx *fiber.Ctx) error {
 	database.DB.Find(&packets)
 
 	if len(packets) == 0 {
-		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Packet not found",
-		})
+		return ctx.JSON([]fiber.Map{})
 	}
 
 	var response []fiber.Map

@@ -110,9 +110,8 @@ const DashboardContent: React.FC = () => {
           if (!response.ok) throw new Error("Gagal mengambil data");
           const data = await response.json();
           setter(data.length);
+          console.log(totalPackets);
         } catch (error) {
-          console.error("Error:", error);
-          setError("Data masih kosong");
         }
       }
       setLoading(false);

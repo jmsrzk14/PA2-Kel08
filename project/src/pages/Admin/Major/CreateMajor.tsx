@@ -46,7 +46,7 @@ const TambahProdi = () => {
 
       Swal.fire({
         title: 'Berhasil!',
-        text: 'Data Paket TryOut berhasil ditambahkan.',
+        text: 'Data Program Study berhasil ditambahkan.',
         icon: 'success',
         confirmButtonColor: '#3085d6',
       }).then(() => {
@@ -136,7 +136,7 @@ const TambahProdi = () => {
           type="submit"
           className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md"
         >
-          Simpan Paket
+          Simpan
         </button>
       </form>
     </div>
