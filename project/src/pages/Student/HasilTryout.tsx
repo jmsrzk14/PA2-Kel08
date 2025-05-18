@@ -181,8 +181,8 @@ const HasilTryout = () => {
     useEffect(() => {
         const fetchData = async () => {
           const endpoints = [
-            { url: "http://127.0.0.1:8000/admin/listStudent", setter: setTotalStudents },
-            { url: "http://127.0.0.1:8000/admin/listSekolah", setter: setTotalSchool },
+            { url: "http://localhost:8000/admin/listStudent", setter: setTotalStudents },
+            { url: "http://localhost:8000/admin/listSekolah", setter: setTotalSchool },
           ];
           for (const { url, setter } of endpoints) {
             try {

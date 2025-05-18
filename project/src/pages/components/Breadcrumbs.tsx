@@ -46,7 +46,7 @@ const Breadcrumbs: React.FC = () => {
   useEffect(() => {
     const fetchPackageName = async (id: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewPacket/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewPacket/${id}`);
         if (response.ok) {
           const data = await response.json();
           setPackageName(data.nama_paket);
@@ -58,7 +58,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchStudentName = async (username: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewStudent/${username}`);
+        const response = await fetch(`http://localhost:8000/admin/viewStudent/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStudentName(data.first_name);
@@ -70,7 +70,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchPtnName = async (id: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewUniversity/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewUniversity/${id}`);
         if (response.ok) {
           const data = await response.json();
           setPtnName(data.nama_ptn);
@@ -82,7 +82,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchMajorName = async (id: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewMajor/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewMajor/${id}`);
         if (response.ok) {
           const data = await response.json();
           setMajorName(data.nama_prodi_ptn);
@@ -94,7 +94,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchSchoolName = async (id: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewSekolah/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewSekolah/${id}`);
         if (response.ok) {
           const data = await response.json();
           setSchoolName(data.sekolah);
@@ -106,7 +106,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchAnnouncementName = async (id: string) => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewAnnouncement/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewAnnouncement/${id}`);
         if (response.ok) {
           const data = await response.json();
           setAnnouncementName(data.judul);

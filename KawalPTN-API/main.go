@@ -15,11 +15,11 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-        AllowOrigins: "http://localhost:5173", 
-        AllowMethods: "GET,POST,PUT,DELETE",
-        AllowHeaders: "Content-Type, Authorization, X-Requested-With",
+		AllowOrigins:     "http://localhost:5173",
+		AllowMethods:     "GET,POST,PUT,DELETE",
+		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
-    }))
+	}))
 
 	app.Static("/", "./public")
 

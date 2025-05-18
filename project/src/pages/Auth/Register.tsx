@@ -70,7 +70,7 @@ const Register: React.FC = () => {
     if (!valid) return;
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/admin/register', {
+      const response = await axios.post('http://localhost:8000/admin/register', {
         name: formData.name,
         email: formData.email,
         password: formData.password,

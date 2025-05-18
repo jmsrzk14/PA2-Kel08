@@ -18,7 +18,7 @@ const LihatSekolah = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewSekolah/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewSekolah/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);

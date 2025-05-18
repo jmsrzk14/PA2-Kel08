@@ -17,7 +17,7 @@ const TambahDayaTampung = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewMajor/${id_prodi}`);
+        const response = await fetch(`http://localhost:8000/admin/viewMajor/${id_prodi}`);
         if (!response.ok) throw new Error('Gagal mengambil data prodi');
         const data = await response.json();
         setNamaProdi(data.nama_prodi_ptn);

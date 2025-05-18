@@ -255,7 +255,7 @@ const Paket = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-        const response = await fetch("http://127.0.0.1:8000/admin/listPacket");
+        const response = await fetch("http://localhost:8000/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
             if (!Array.isArray(data)) {

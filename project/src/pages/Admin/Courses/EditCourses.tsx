@@ -14,7 +14,7 @@ const EditPaket = () => {
   useEffect(() => {
     const fetchPaket = async () => {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/viewPacket/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewPacket/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -56,7 +56,7 @@ const EditPaket = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/admin/editPacket/${id}`, {
+          const response = await fetch(`http://localhost:8000/admin/editPacket/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",

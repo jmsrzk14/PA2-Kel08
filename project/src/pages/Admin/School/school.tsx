@@ -72,7 +72,7 @@ const SchoolsContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://127.0.0.1:8000/admin/listSekolah/${id}`, {
+          const response = await fetch(`http://localhost:8000/admin/listSekolah/${id}`, {
             method: "DELETE",
             credentials: "include",
           });

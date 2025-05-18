@@ -35,7 +35,7 @@ const PtnContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/admin/listUniversity");
+        const response = await fetch("http://localhost:8000/admin/listUniversity");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: UniversityPackage[] = await response.json();
         setUniversity(data);
@@ -70,7 +70,7 @@ const PtnContent = () => {
     }).then(async (result) => {
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`http://127.0.0.1:8000/admin/listUniversity/${id}`, {
+        const response = await fetch(`http://localhost:8000/admin/listUniversity/${id}`, {
           method: "DELETE",
         });
         if (!response.ok) throw new Error("Gagal menghapus universitas");
