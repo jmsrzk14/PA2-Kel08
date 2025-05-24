@@ -43,7 +43,7 @@ const EditPtn = () => {
 
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: "Data Prodi tidak akan dapat dikembalikan!",
+      text: "Data PTN tidak akan dapat dikembalikan!",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#3085d6',
@@ -62,12 +62,12 @@ const EditPtn = () => {
           });
 
           if (!response.ok) {
-            throw new Error("Gagal mengedit prodi");
+            throw new Error("Gagal mengedit PTN");
           }
 
           Swal.fire({
             title: 'Berhasil!',
-            text: 'Data Prodi berhasil diubah.',
+            text: 'Data PTN berhasil diubah.',
             icon: 'success',
             confirmButtonColor: '#333',
           }).then(() => {

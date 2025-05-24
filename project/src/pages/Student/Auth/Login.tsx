@@ -14,9 +14,24 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const handlePasswordBlur = () => {
+    if (password.length < 8 && password.length > 0) {
+      setPasswordError('Password harus minimal 8 karakter');
+    } else {
+      setPasswordError('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Password length validation
+    if (password.length < 8) {
+      setPasswordError('Password harus minimal 8 karakter');
+      return;
+    }
 
     try {
       const response = await axios.post('http://localhost:8000/student/login', {
@@ -39,6 +54,7 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
     } catch (err: any) {
       console.error(err);
       setErrorMsg('Email atau password salah');
+      setPasswordError('');
     }
   };
 
@@ -67,7 +83,7 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
             {errorMsg && <p className="text-red-500 text-sm">{errorMsg}</p>}
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="email" className="block text-sm scallions-medium text-gray-700">
                 Username
               </label>
               <div className="mt-1">
@@ -94,8 +110,11 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onBlur={handlePasswordBlur}
                   required
-                  className="appearance-none block w-full px-3 py-2 pr-10 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-[2.5em]"
+                  className={`appearance-none block w-full px-3 py-2 pr-10 border ${
+                    passwordError ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-[2.5em]`}
                 />
                 <div
                   className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
@@ -104,6 +123,7 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </div>
               </div>
+              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
             </div>
 
             <div className="flex items-center justify-between">

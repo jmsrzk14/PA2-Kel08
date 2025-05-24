@@ -17,30 +17,33 @@ const Tryout: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:8000/student/myPacket", {
-          withCredentials: true,
-        });
+        withCredentials: true,
+      });
 
-        const packets = response.data;
+      const packets = response.data; 
 
-        const packetsWithNames = await Promise.all(
-          packets.map(async (packet: { id: number; id_paket: number }) => {
-            try {
-              const paketResponse = await axios.get(`http://localhost:8000/admin/viewPacket/${packet.id_paket}`);
-              return {
-                ...packet,
-                nama_paket: paketResponse.data.nama_paket,
-              };
-            } catch (error) {
-              console.error(`Gagal ambil paket ${packet.id_paket}`, error);
-              return {
-                ...packet,
-                nama_paket: "Nama Paket Tidak Ditemukan",
-              };
-            }
-          })
-        );
+      const packetsWithNames = await Promise.all(
+        packets.map(async (packet: { id: string; id_paket: number }) => {
+          try {
+            const paketResponse = await axios.get(
+              `http://localhost:8000/admin/viewPacket/${packet.id_paket}`
+            );
+            return {
+              ...packet,
+              nama_paket: paketResponse.data.packet.nama_paket,
+            };
+          } catch (error) {
+            console.error(`Gagal ambil paket ${packet.id_paket}`, error);
+            return {
+              ...packet,
+              nama_paket: "Nama Paket Tidak Ditemukan",
+            };
+          }
+        })
+      );
 
-        setData(packetsWithNames);
+      setData(packetsWithNames);
+
       } catch (error) {
         console.error("Error fetching tryout data:", error);
       } finally {

@@ -69,7 +69,7 @@ const EditSekolah = () => {
             title: 'Berhasil!',
             text: 'Data Sekolah berhasil diubah.',
             icon: 'success',
-            confirmButtonColor: '#33',
+            confirmButtonColor: '#333',
           }).then(() => {
             navigate('/dashboard/school/list');
           });
@@ -79,7 +79,7 @@ const EditSekolah = () => {
             title: 'Gagal!',
             text: (error as Error).message || 'Terjadi kesalahan saat menghapus.',
             icon: 'error',
-            confirmButtonColor: '#d3085d6',
+            confirmButtonColor: '#333',
           });
         }
       }
@@ -134,8 +134,8 @@ const EditSekolah = () => {
             required
           >
             <option value="">Pilih Status</option>
-            <option value="S">S</option>
-            <option value="N">N</option>
+            <option value="S">Swasta</option>
+            <option value="N">Negeri</option>
           </select>
         </div>
         <button

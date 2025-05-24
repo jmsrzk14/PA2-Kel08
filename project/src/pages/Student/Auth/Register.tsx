@@ -26,36 +26,44 @@ const Register: React.FC = () => {
     confirmPassword: '',
   });
 
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
 
-    setFormData(prev => ({ ...prev, [name]: value }));
-    setErrors(prev => ({ ...prev, [name]: '' }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
 
     if (name === 'password') {
       if (value.length < 8) {
-        setErrors(prev => ({ ...prev, password: 'Password minimal 8 karakter' }));
+        setErrors((prev) => ({ ...prev, password: 'Password harus minimal 8 karakter' }));
       } else if (formData.confirmPassword && value !== formData.confirmPassword) {
-        setErrors(prev => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
+        setErrors((prev) => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
       } else {
-        setErrors(prev => ({ ...prev, password: '', confirmPassword: '' }));
+        setErrors((prev) => ({ ...prev, password: '', confirmPassword: formData.confirmPassword ? '' : prev.confirmPassword }));
       }
     }
 
     if (name === 'confirmPassword') {
-      if (value !== formData.password) {
-        setErrors(prev => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
+      if (value.length < 8) {
+        setErrors((prev) => ({ ...prev, confirmPassword: 'Konfirmasi password harus minimal 8 karakter' }));
+      } else if (value !== formData.password) {
+        setErrors((prev) => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
       } else {
-        setErrors(prev => ({ ...prev, confirmPassword: '' }));
+        setErrors((prev) => ({ ...prev, confirmPassword: '' }));
       }
     }
   };
 
   const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
+
     if (!value) {
-      setErrors(prev => ({ ...prev, [name]: 'Kolom ini wajib diisi' }));
+      setErrors((prev) => ({ ...prev, [name]: 'Kolom ini wajib diisi' }));
+    } else if (name === 'password' && value.length < 8) {
+      setErrors((prev) => ({ ...prev, password: 'Password harus minimal 8 karakter' }));
+    } else if (name === 'confirmPassword' && value.length < 8) {
+      setErrors((prev) => ({ ...prev, confirmPassword: 'Konfirmasi password harus minimal 8 karakter' }));
+    } else if (name === 'confirmPassword' && value !== formData.password) {
+      setErrors((prev) => ({ ...prev, confirmPassword: 'Password tidak cocok' }));
     }
   };
 
@@ -72,7 +80,15 @@ const Register: React.FC = () => {
       }
     });
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.password.length < 8) {
+      newErrors.password = 'Password harus minimal 8 karakter';
+      valid = false;
+    }
+
+    if (formData.confirmPassword.length < 8) {
+      newErrors.confirmPassword = 'Konfirmasi password harus minimal 8 karakter';
+      valid = false;
+    } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Password tidak cocok';
       valid = false;
     }
@@ -90,8 +106,6 @@ const Register: React.FC = () => {
         password: formData.password,
       });
 
-      console.log(response);
-
       if (response.status === 201 || response.status === 200) {
         Swal.fire({
           icon: 'success',
@@ -103,7 +117,6 @@ const Register: React.FC = () => {
         });
       }
     } catch (error: any) {
-      console.log(error);
       Swal.fire({
         icon: 'error',
         title: 'Registrasi Gagal',
@@ -160,6 +173,11 @@ const Register: React.FC = () => {
                         errors[field as keyof typeof errors] ? 'border-red-500' : 'border-gray-300'
                       } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 h-[2.5em]`}
                     />
+                    <div className="min-h-[1.5rem] mt-1">
+                      {errors[field as keyof typeof errors] && (
+                        <p className="text-sm text-red-500">{errors[field as keyof typeof errors]}</p>
+                      )}
+                    </div>
                   </div>
                 );
               })}
@@ -185,9 +203,13 @@ const Register: React.FC = () => {
                   <option value="SOSHUM">SOSHUM</option>
                   <option value="CAMPURAN">CAMPURAN</option>
                 </select>
+                <div className="min-h-[1.5rem] mt-1">
+                  {errors.kelompok_ujian && (
+                    <p className="text-sm text-red-500">{errors.kelompok_ujian}</p>
+                  )}
+                </div>
               </div>
 
-              {/* Password & Confirm Password */}
               {['password', 'confirmPassword'].map((field) => {
                 const labelMap: Record<string, string> = {
                   password: 'Password',
@@ -214,12 +236,17 @@ const Register: React.FC = () => {
                       />
                       <button
                         type="button"
-                        onClick={() => setShowPassword(prev => !prev)}
+                        onClick={() => setShowPassword((prev) => !prev)}
                         className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
                         tabIndex={-1}
                       >
                         {showPassword ? <EyeOff className="h-5 w-5 text-gray-500" /> : <Eye className="h-5 w-5 text-gray-500" />}
                       </button>
+                    </div>
+                    <div className="min-h-[1.5rem] mt-1">
+                      {errors[field as keyof typeof errors] && (
+                        <p className="text-sm text-red-500">{errors[field as keyof typeof errors]}</p>
+                      )}
                     </div>
                   </div>
                 );

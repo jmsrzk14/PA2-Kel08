@@ -29,7 +29,6 @@ const TryoutPackageCard = ({
     nama_paket = "",
     price = 0,
     duration = "",
-    // features = [""],
     isPopular = false,
     participants = 0,
     subjects = [],
@@ -40,7 +39,6 @@ const TryoutPackageCard = ({
     nama_paket?: string;
     price?: number;
     duration?: string;
-    // features?: string[];
     isPopular?: boolean;
     participants?: number;
     subjects?: string[];
@@ -196,20 +194,6 @@ const TryoutPackageCard = ({
                         <p className='text-gray-600'>{deskripsi}</p>
                     </div>
 
-                    {/* <div className='mb-6'>
-                        <h3 className='text-lg font-semibold text-gray-800 mb-2'>Fitur Paket</h3>
-                        <ul className="space-y-3 mb-6">
-                            {features.map((feature, index) => (
-                                <li key={index} className="flex items-center gap-2">
-                                    <div className="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center border border-blue-500">
-                                        <Check size={12} className="text-blue-600" />
-                                    </div>
-                                    <span className="text-gray-600">{feature}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div> */}
-
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Mata Pelajaran</h3>
                         {Array.isArray(subjects) && subjects.length > 0 ? (
@@ -231,10 +215,6 @@ const TryoutPackageCard = ({
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Statistik</h3>
                         <div className="flex gap-4 mb-6">
-                            {/* <div className="flex items-center gap-1 text-gray-600">
-                                <Users size={16} />
-                                <span>{participants.toLocaleString()} peserta</span>
-                            </div> */}
                             <div className="flex items-center gap-1 text-gray-600">
                                 <BookOpen size={16} />
                                 <span>{subjects.length} teori yang diujikan</span>
@@ -265,6 +245,7 @@ export default function Guest() {
     const [packages, setPackages] = useState<CoursePackage[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+    const [visiblePackages, setVisiblePackages] = useState<number>(3); // State to track number of visible packages
 
     useEffect(() => {
         const fetchData = async () => {
@@ -282,6 +263,11 @@ export default function Guest() {
 
         fetchData();
     }, []);
+
+    // Function to handle "Lihat Paket Lebih Banyak" button
+    const handleShowMore = () => {
+        setVisiblePackages((prev) => prev + 3); // Show 3 more packages each time
+    };
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
@@ -363,7 +349,6 @@ export default function Guest() {
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        
                         <div className="bg-teal-500 p-4 rounded-md text-white">
                             <h3 className="font-semibold text-center mb-3 text-sm">Memudahkan Akses Tryout Berkualitas</h3>
                             <p className="text-xs text-center">
@@ -433,14 +418,12 @@ export default function Guest() {
                     ) : (
                         <>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                                {packages.slice(0, 3).map((pkg) => (
+                                {packages.slice(0, visiblePackages).map((pkg) => (
                                     <TryoutPackageCard
                                         key={pkg.id}
                                         id={pkg.id}
                                         nama_paket={pkg.nama_paket}
                                         price={pkg.price}
-                                        // duration="6 bulan"
-                                        // features={["Akses Tryout Online", "Bank Soal", "Konsultasi"]}
                                         subjects={pkg.subjects}
                                         participants={1500}
                                         deskripsi={pkg.deskripsi}
@@ -448,11 +431,16 @@ export default function Guest() {
                                 ))}
                             </div>
 
-                            <div className="flex justify-center">
-                                <button className="border border-teal-500 text-teal-500 rounded-md px-6 py-2 hover:bg-teal-50">
-                                    Lihat Paket Lebih Banyak
-                                </button>
-                            </div>
+                            {visiblePackages < packages.length && (
+                                <div className="flex justify-center">
+                                    <button
+                                        onClick={handleShowMore}
+                                        className="border border-teal-500 text-teal-500 rounded-md px-6 py-2 hover:bg-teal-50"
+                                    >
+                                        Lihat Paket Lebih Banyak
+                                    </button>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>

@@ -169,21 +169,21 @@ func IndexPacket(ctx *fiber.Ctx) error {
 	}
 
 	var response []fiber.Map
-    for _, packet := range packets {
-        var subjects []string
-        if err := json.Unmarshal([]byte(packet.Subjects), &subjects); err != nil {
-            return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-                "message": "Failed to decode subjects",
-            })
-        }
-        response = append(response, fiber.Map{
-            "id":         packet.ID,
-            "nama_paket": packet.Nama_Paket,
-            "price":      packet.Price,
-            "subjects":   subjects,
-            "deskripsi":  packet.Deskripsi,
-        })
-    }
+	for _, packet := range packets {
+		var subjects []string
+		if err := json.Unmarshal([]byte(packet.Subjects), &subjects); err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"message": "Failed to decode subjects",
+			})
+		}
+		response = append(response, fiber.Map{
+			"id":         packet.ID,
+			"nama_paket": packet.Nama_Paket,
+			"price":      packet.Price,
+			"subjects":   subjects,
+			"deskripsi":  packet.Deskripsi,
+		})
+	}
 	return ctx.JSON(response)
 }
 
@@ -238,7 +238,7 @@ func UpdatePacket(ctx *fiber.Ctx) error {
 
 	if packetID != int(packet.ID) {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Product not found",
+			"message": "Packet not found",
 		})
 	}
 
@@ -283,9 +283,11 @@ func UpdatePacket(ctx *fiber.Ctx) error {
 	result := database.DB.Model(&packet).Updates(models.T_Paket{
 		Nama_Paket: name,
 		Total:      totalInt,
+		Deskripsi:  deskripsi,
 		Active:     activeInt,
 		Price:      priceInt,
 	})
+	
 	if result.Error != nil {
 		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Error Updating",

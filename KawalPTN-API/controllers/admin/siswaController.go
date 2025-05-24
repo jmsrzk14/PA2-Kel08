@@ -235,13 +235,20 @@ func UpdateStudent(ctx *fiber.Ctx) error {
 }
 
 func DeleteStudent(ctx *fiber.Ctx) error {
-	studentId := ctx.Params("id")
+	studentIdStr := ctx.Params("id")
+	studentId, err := strconv.Atoi(studentIdStr)
+
+	if err != nil {
+		return ctx.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid student ID",
+		})
+	}
 
 	var student models.T_Siswa
 
 	database.DB.Where("id = ?", studentId).First(&student)
 
-	if studentId != student.Username {
+	if studentId != int(student.ID) {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"message": "Student not found",
 		})

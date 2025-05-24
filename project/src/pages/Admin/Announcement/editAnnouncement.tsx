@@ -65,7 +65,7 @@ const EditAnnouncement = () => {
             title: 'Berhasil!',
             text: 'Data Pengumuman berhasil diubah.',
             icon: 'success',
-            confirmButtonColor: '#33',
+            confirmButtonColor: '#333',
           }).then(() => {
             navigate('/dashboard/announcement/list');
           });
@@ -75,7 +75,7 @@ const EditAnnouncement = () => {
             title: 'Gagal!',
             text: (error as Error).message || 'Terjadi kesalahan saat menghapus.',
             icon: 'error',
-            confirmButtonColor: '#d3085d6',
+            confirmButtonColor: '#333',
           });
         }
       }

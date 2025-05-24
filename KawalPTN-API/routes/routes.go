@@ -26,7 +26,7 @@ func Setup(app *fiber.App) {
 
 	admin.Get("/listStudent", controllers.IndexStudent)
 	admin.Get("/viewStudent/:username", controllers.ShowStudent)
-	admin.Delete("/listStudent/:username", controllers.DeleteStudent)
+	admin.Delete("/listStudent/:id", controllers.DeleteStudent)
 	admin.Put("/editStudent/:username", controllers.UpdateStudent)
 
 	admin.Post("/createUniversity", controllers.CreateUniversity)

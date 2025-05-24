@@ -221,7 +221,7 @@ function Profil() {
                             </div>
                         </div>
                         <div className="w-1/4">
-                            <img className="w-[8em] mt-4 ml-5" src={`http://localhost:8000/${studentData.foto?.replace(/\\/g, "/")}`} />
+                            <img className="w-[7em] h-auto mt-4 ml-5" src={`http://localhost:8000/${studentData.foto?.replace(/\\/g, "/")}`} />
                         </div>
                     </div>
                 </div>

@@ -19,11 +19,11 @@ const EditPaket = () => {
         const data = await response.json();
         console.log("Data dari API:", data);
         
-        setNamaPaket(data.nama_paket);
-        setDeskripsi(data.deskripsi);
-        setTotal(data.total.toString());
-        setActive(data.active.toString());
-        setPrice(data.price.toString());
+        setNamaPaket(data.packet.nama_paket);
+        setDeskripsi(data.packet.deskripsi);
+        setTotal(data.packet.total.toString());
+        setActive(data.packet.active.toString());
+        setPrice(data.packet.price.toString());
       } catch (error) {
         console.error("Error fetching paket:", error);
       }

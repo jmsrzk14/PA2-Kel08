@@ -590,12 +590,18 @@ function EditProfil() {
                         {/* Kelompok Ujian */}
                         <div className="flex items-center">
                             <label className="w-1/4 font-semibold">Kelompok Ujian</label>
-                            <input
-                                type="text"
-                                className="w-3/4 border p-1 rounded"
+                            <select
+                                id="kelompok_ujian"
+                                name="kelompok_ujian"
+                                required
                                 value={editForm.kelompok_ujian}
                                 onChange={(e) => handleEditFormChange("kelompok_ujian", e.target.value)}
-                            />
+                                className="w-3/4 border p-1 rounded"
+                            >
+                                <option value="SAINTEK">SAINTEK</option>
+                                <option value="SOSHUM">SOSHUM</option>
+                                <option value="CAMPURAN">CAMPURAN</option>
+                            </select>
                         </div>
     
                         {/* Telepon */}

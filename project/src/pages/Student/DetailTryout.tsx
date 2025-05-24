@@ -78,11 +78,7 @@ const DetailTryout = () => {
       }
 
       const image = await pdfDoc.embedJpg(imageArrayBuffer);
-<<<<<<< HEAD
-      const imageWidth = 100;
-=======
       const imageWidth = 100; 
->>>>>>> 6e6f12d (PA2 Kel-08)
       const imageHeight = 130;
 
       firstPage.drawImage(image, {
