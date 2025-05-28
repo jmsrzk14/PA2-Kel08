@@ -16,7 +16,7 @@ func main() {
 	app := fiber.New()
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "http://localhost:5173,https://your-app-name.herokuapp.com",
+		AllowOrigins:     "http://localhost:5173",
 		AllowMethods:     "GET,POST,PUT,DELETE",
 		AllowHeaders:     "Content-Type, Authorization, X-Requested-With",
 		AllowCredentials: true,
@@ -26,7 +26,6 @@ func main() {
 
 	routes.Setup(app)
 
-	// Gunakan port dari variabel lingkungan PORT atau default ke 8000
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8000"
