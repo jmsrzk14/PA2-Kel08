@@ -12,8 +12,8 @@ type T_Ptn struct {
 	Nama_singkat string     `json:"nama_singkat" gorm:"not null"`
 	Active       *int       `json:"active" gorm:"default: null"`
 	Alamat_web   string     `json:"alamat_web" gorm:"not null"`
-	CreatedAt    *time.Time `gorm:"autoCreateTime;default:null" json:"created_at"`
-	UpdatedAt    *time.Time `gorm:"autoUpdateTime;default:null" json:"updated_at"`
+	CreatedAt    *time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt    *time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (t_ptn *T_Ptn) ValidateTPtn() error {

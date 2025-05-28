@@ -18,8 +18,8 @@ type Sekolah_Sma struct {
 	Bentuk      string     `json:"bentuk" gorm:"not null"`
 	Sekolah     string     `json:"sekolah" gorm:"not null"`
 	Status      string     `json:"status" gorm:"not null"`
-	CreatedAt   *time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt   *time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
+	CreatedAt   *time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt   *time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (sekolah_sma *Sekolah_Sma) ValidateSekolahSma() error {

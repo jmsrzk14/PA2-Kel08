@@ -14,7 +14,7 @@ type Users struct {
 	Password     string     `json:"password" gorm:"not null" validate:"required"`
 	Role         int        `json:"role" gorm:"not null;default:0"`
 	CreatedAt    *time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt    *time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
+	UpdatedAt    *time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (users *Users) ValidateUsers() error {

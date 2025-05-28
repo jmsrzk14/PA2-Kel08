@@ -21,8 +21,8 @@ type T_Nilai struct {
 	Lbi       int        `json:"lbi" gorm:"not null"`
 	Lbe       int        `json:"lbe" gorm:"not null"`
 	Pm        int        `json:"pm" gorm:"not null"`
-	CreatedAt *time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt *time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
+	CreatedAt *time.Time `gorm:"autoCreateTime" json:"created_at"`
+	UpdatedAt *time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
 func (t_nilai *T_Nilai) ValidateTNilai() error {
