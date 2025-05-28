@@ -1,0 +1,16 @@
+app = "kawalptn-db"
+
+[env]
+  MYSQL_ROOT_PASSWORD = "rootpassword"
+  MYSQL_DATABASE = "kawalptn"
+  MYSQL_USER = "kawal"
+  MYSQL_PASSWORD = "kawal123"
+
+[mounts]
+  source = "mysql_data"
+  destination = "/var/lib/mysql"
+
+[services]
+  [services.ports]
+    port = 3306
+    handlers = ["tcp"]
