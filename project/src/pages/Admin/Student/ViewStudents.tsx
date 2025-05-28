@@ -50,7 +50,7 @@ const LihatSiswa = () => {
   useEffect(() => {
     const fetchCoursesList = async () => {
       try {
-        const response = await fetch("http://160.19.166.155:8000/admin/listPacket");
+        const response = await fetch("https://160.19.166.155:8000/admin/listPacket");
         const data = await response.json();
         console.log("Data dari API:", data);
         setCoursesList(data);
@@ -64,7 +64,7 @@ const LihatSiswa = () => {
       setErrorStudent('');
       console.log("ID Siswa dari params:", id);
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewStudent/${username}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewStudent/${username}`);
         if (!response.ok) throw new Error('Gagal mengambil data siswa');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -93,7 +93,7 @@ const LihatSiswa = () => {
       setLoadingScore(true);
       setErrorScore('');
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewScore/${id}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewScore/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data nilai');
         const data = await response.json();
         console.log("Data dari API:", data);

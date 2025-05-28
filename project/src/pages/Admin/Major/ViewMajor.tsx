@@ -42,7 +42,7 @@ const LihatProdi = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewMajor/${id_prodi}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewMajor/${id_prodi}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -64,7 +64,7 @@ const LihatProdi = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/listCapacity/${id_prodi}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/listCapacity/${id_prodi}`);
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: MajorCapacity[] = await response.json();
         setCapacity(data);
@@ -92,7 +92,7 @@ const LihatProdi = () => {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            const response = await fetch(`http://160.19.166.155:8000/admin/listCapacity/${id}`, {
+            const response = await fetch(`https://160.19.166.155:8000/admin/listCapacity/${id}`, {
               method: "DELETE",
             });
               if (!response.ok) throw new Error("Gagal menghapus Program Studi");             

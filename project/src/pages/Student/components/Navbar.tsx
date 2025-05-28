@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`http://160.19.166.155:8000/student/profile`, {
+        const response = await axios.get(`https://160.19.166.155:8000/student/profile`, {
           withCredentials: true,
         });
 

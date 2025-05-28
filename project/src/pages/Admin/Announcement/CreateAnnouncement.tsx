@@ -18,7 +18,7 @@ const TambahPengumuman = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`http://160.19.166.155:8000/admin/profile`, {
+        const response = await axios.get(`https://160.19.166.155:8000/admin/profile`, {
           withCredentials: true,
         });
   
@@ -47,7 +47,7 @@ const TambahPengumuman = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("http://160.19.166.155:8000/admin/createAnnouncement", {
+      const response = await fetch("https://160.19.166.155:8000/admin/createAnnouncement", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

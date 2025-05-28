@@ -35,7 +35,7 @@ const SchoolsContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://160.19.166.155:8000/admin/listSekolah");
+        const response = await fetch("https://160.19.166.155:8000/admin/listSekolah");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: School[] = await response.json();
         setSchool(data);
@@ -72,7 +72,7 @@ const SchoolsContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://160.19.166.155:8000/admin/listSekolah/${id}`, {
+          const response = await fetch(`https://160.19.166.155:8000/admin/listSekolah/${id}`, {
             method: "DELETE",
             credentials: "include",
           });

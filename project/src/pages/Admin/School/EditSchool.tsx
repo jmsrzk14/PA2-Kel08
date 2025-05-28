@@ -13,7 +13,7 @@ const EditSekolah = () => {
   useEffect(() => {
     const fetchSchool = async () => {
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewSekolah/${id}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewSekolah/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -53,7 +53,7 @@ const EditSekolah = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://160.19.166.155:8000/admin/editSekolah/${id}`, {
+          const response = await fetch(`https://160.19.166.155:8000/admin/editSekolah/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",

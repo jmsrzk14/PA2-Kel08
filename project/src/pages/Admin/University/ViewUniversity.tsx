@@ -15,7 +15,7 @@ const LihatPaket = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewUniversity/${id_ptn}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewUniversity/${id_ptn}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);

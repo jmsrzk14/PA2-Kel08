@@ -39,5 +39,5 @@ app.post('/api/checkout', async (req, res) => {
 
 const PORT = 5000;
 app.listen(PORT, () => {
-    console.log(`Backend berjalan di http://160.19.166.155:${PORT}`);
+    console.log(`Backend berjalan di https://160.19.166.155:${PORT}`);
 });

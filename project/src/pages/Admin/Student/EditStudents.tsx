@@ -13,7 +13,7 @@ const EditSiswa = () => {
   useEffect(() => {
     const fetchPaket = async () => {
       try {
-        const response = await fetch(`http://160.19.166.155:8000/admin/viewStudent/${username}`);
+        const response = await fetch(`https://160.19.166.155:8000/admin/viewStudent/${username}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -53,7 +53,7 @@ const EditSiswa = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://160.19.166.155:8000/admin/editStudent/${username}`, {
+          const response = await fetch(`https://160.19.166.155:8000/admin/editStudent/${username}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
