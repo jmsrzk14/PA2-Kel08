@@ -19,7 +19,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole }) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/admin/login', {
+      const response = await axios.post('http://160.19.166.155:8000/admin/login', {
         email,
         password
       },

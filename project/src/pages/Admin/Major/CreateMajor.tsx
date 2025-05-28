@@ -14,7 +14,7 @@ const TambahProdi = () => {
   useEffect(() => {
     const fetchPtnList = async () => {
       try {
-        const response = await fetch("http://localhost:8000/admin/listUniversity");
+        const response = await fetch("http://160.19.166.155:8000/admin/listUniversity");
         const data = await response.json();
         setPtnList(data);
       } catch (error) {
@@ -36,7 +36,7 @@ const TambahProdi = () => {
     formData.append("ptn_id", selectedPtn);
 
     try {
-      const response = await fetch("http://localhost:8000/admin/createMajor", {
+      const response = await fetch("http://160.19.166.155:8000/admin/createMajor", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

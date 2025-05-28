@@ -68,7 +68,7 @@ const DashboardContent: React.FC = () => {
       setStudentChartLoading(true);
       setStudentChartError("");
       try {
-        const response = await fetch("http://localhost:8000/admin/listStudent");
+        const response = await fetch("http://160.19.166.155:8000/admin/listStudent");
         if (!response.ok) throw new Error("Gagal mengambil data students");
         const data: Student[] = await response.json();
         setStudentData(data);
@@ -99,9 +99,9 @@ const DashboardContent: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const endpoints = [
-        { url: "http://localhost:8000/admin/listPacket", setter: setTotalPackets },
-        { url: "http://localhost:8000/admin/listUniversity", setter: setTotalUniversity },
-        { url: "http://localhost:8000/admin/listMajor", setter: setTotalMajor },
+        { url: "http://160.19.166.155:8000/admin/listPacket", setter: setTotalPackets },
+        { url: "http://160.19.166.155:8000/admin/listUniversity", setter: setTotalUniversity },
+        { url: "http://160.19.166.155:8000/admin/listMajor", setter: setTotalMajor },
       ];
   
       for (const { url, setter } of endpoints) {

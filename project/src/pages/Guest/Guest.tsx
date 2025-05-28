@@ -55,7 +55,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch("http://localhost:8000/student/profile", {
+                const response = await fetch("http://160.19.166.155:8000/student/profile", {
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -76,7 +76,7 @@ const TryoutPackageCard = ({
         }
 
         try {
-            const response = await fetch("http://localhost:5000/api/checkout", {
+            const response = await fetch("http://160.19.166.155:5000/api/checkout", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +104,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await fetch("http://localhost:8000/student/sendPayment", {
+                        await fetch("http://160.19.166.155:8000/student/sendPayment", {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -250,7 +250,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:8000/admin/listPacket");
+                const response = await fetch("http://160.19.166.155:8000/admin/listPacket");
                 if (!response.ok) throw new Error("Data tidak ditemukan!");
                 const data: CoursePackage[] = await response.json();
                 setPackages(data);

@@ -57,6 +57,8 @@ func Register(ctx *fiber.Ctx) error {
 		})
 	}
 
+	student.CreatedAt = time.Time{}
+	student.UpdatedAt = time.Time{}
 	database.DB.Create(&student)
 	return ctx.JSON(student)
 }

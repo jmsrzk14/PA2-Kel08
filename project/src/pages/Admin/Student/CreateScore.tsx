@@ -23,7 +23,7 @@ const Tambahnilai = () => {
   useEffect(() => {
     const fetchCoursesList = async () => {
       try {
-        const response = await fetch("http://localhost:8000/admin/listPacket");
+        const response = await fetch("http://160.19.166.155:8000/admin/listPacket");
         const data = await response.json();
         console.log("Data dari API:", data);
         setCoursesList(data);
@@ -40,7 +40,7 @@ const Tambahnilai = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewStudent/${username}`);
+        const response = await fetch(`http://160.19.166.155:8000/admin/viewStudent/${username}`);
         if (!response.ok) throw new Error('Gagal mengambil data siswa');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -77,7 +77,7 @@ const Tambahnilai = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("http://localhost:8000/admin/createScore", {
+      const response = await fetch("http://160.19.166.155:8000/admin/createScore", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

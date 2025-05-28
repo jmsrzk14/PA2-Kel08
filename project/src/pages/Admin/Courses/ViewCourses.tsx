@@ -23,7 +23,7 @@ const LihatPaket = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewPacket/${id}`);
+        const response = await fetch(`http://160.19.166.155:8000/admin/viewPacket/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         const packet = data.packet;

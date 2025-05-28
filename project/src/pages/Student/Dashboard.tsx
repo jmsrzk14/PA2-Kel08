@@ -32,7 +32,7 @@ const DashboardContent = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/student/profile", {
+        const response = await axios.get("http://160.19.166.155:8000/student/profile", {
           withCredentials: true,
         });
         setUserId(response.data.data.id);
@@ -47,7 +47,7 @@ const DashboardContent = () => {
     const fetchUserScores = async () => {
       if (userId !== null) {
         try {
-          const response = await axios.get(`http://localhost:8000/admin/viewScorePacket/${userId}`, {
+          const response = await axios.get(`http://160.19.166.155:8000/admin/viewScorePacket/${userId}`, {
             withCredentials: true,
           });
           setScores(response.data);
