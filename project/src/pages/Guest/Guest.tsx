@@ -250,7 +250,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("https://cors-anywhere.herokuapp.com/http://160.19.166.155:8000/admin/listPacket")
+                const response = await fetch("https://160.19.166.155:8000/admin/listPacket");
                 if (!response.ok) throw new Error("Data tidak ditemukan!");
                 const data: CoursePackage[] = await response.json();
                 setPackages(data);
