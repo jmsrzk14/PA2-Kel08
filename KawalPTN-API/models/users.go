@@ -13,7 +13,7 @@ type Users struct {
 	Email        string     `json:"email" gorm:"not null" validate:"required"`
 	Password     string     `json:"password" gorm:"not null" validate:"required"`
 	Role         int        `json:"role" gorm:"not null;default:0"`
-	CreatedAt    *time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	CreatedAt    *time.Time `gorm:"autoCreateTime" json:"created_at"`
 	UpdatedAt    *time.Time `gorm:"autoUpdateTime" json:"updated_at"`
 }
 
