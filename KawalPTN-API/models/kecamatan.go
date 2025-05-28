@@ -7,12 +7,12 @@ import (
 )
 
 type Kecamatan struct {
-	ID          uint        `json:"id"`
-	Kecamatan   string      `json:"kecamatan" gorm:"not null"`
-	KabupatenID uint        `json:"kabupaten_id" gorm:"not null"`
-	Kabupaten   Kabupaten   `gorm:"foreignKey:KabupatenID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;" json:"kabupaten"`
-	CreatedAt   **time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
-	UpdatedAt   **time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
+	ID          uint       `json:"id"`
+	Kecamatan   string     `json:"kecamatan" gorm:"not null"`
+	KabupatenID uint       `json:"kabupaten_id" gorm:"not null"`
+	Kabupaten   Kabupaten  `gorm:"foreignKey:KabupatenID;constraint:OnDelete:CASCADE,OnUpdate:CASCADE;" json:"kabupaten"`
+	CreatedAt   *time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt   *time.Time `gorm:"default:CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP" json:"updated_at"`
 }
 
 func (kecamatan *Kecamatan) ValidateKecamatan() error {
