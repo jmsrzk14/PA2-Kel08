@@ -3,12 +3,12 @@ package controllers
 import (
 	"KawalPTN-API/database"
 	"KawalPTN-API/models"
+	"encoding/base64"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
-	"encoding/base64"
-    "os"
-	"path/filepath"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/go-playground/validator/v10"
@@ -40,7 +40,7 @@ func Register(ctx *fiber.Ctx) error {
 		Password:       string(hashedPassword),
 	}
 
-	fmt.Println(student);
+	fmt.Println(student)
 
 	if err := student.ValidateTSiswa(); err != nil {
 		if validateErr, ok := err.(validator.ValidationErrors); ok {
@@ -57,8 +57,8 @@ func Register(ctx *fiber.Ctx) error {
 		})
 	}
 
-	student.CreatedAt = time.Time{}
-	student.UpdatedAt = time.Time{}
+	student.CreatedAt = *time.Time{}
+	student.UpdatedAt = *time.Time{}
 	database.DB.Create(&student)
 	return ctx.JSON(student)
 }
@@ -167,7 +167,7 @@ func UpdateStudent(ctx *fiber.Ctx) error {
 				}
 			}
 
-			filePath := fmt.Sprintf("siswa/siswa_%s.jpg", id) 
+			filePath := fmt.Sprintf("siswa/siswa_%s.jpg", id)
 			fullPath := filepath.Join(saveDir, filePath)
 			err = os.WriteFile(fullPath, decodedImage, 0644)
 			if err != nil {

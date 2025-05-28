@@ -25,9 +25,9 @@ type T_Siswa struct {
 	Email          string      `json:"email" gorm:"default:null"`
 	Group1         *string     `json:"group1" gorm:"default:null"`
 	Cohort1        *string     `json:"cohort1" gorm:"default:null"`
-	CreatedAt      time.Time   `gorm:"autoCreateTime" json:"created_at"`
+	CreatedAt      *time.Time  `gorm:"autoCreateTime" json:"created_at"`
 	CreatedBy      *int        `json:"created_by" gorm:"default:null"`
-	UpdatedAt      time.Time   `gorm:"autoUpdateTime" json:"updated_at"`
+	UpdatedAt      *time.Time  `gorm:"autoUpdateTime" json:"updated_at"`
 	UpdatedBy      *int        `json:"updated_by" gorm:"default:null"`
 	Status         *int        `json:"status" gorm:"default:0"`
 	Status_KPJ     *int        `json:"status_kpj" gorm:"default:0"`
