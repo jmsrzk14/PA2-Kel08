@@ -10,7 +10,7 @@ import (
 var DB *gorm.DB
 
 func Connect() {
-	dsn := "kawal:kawal123@tcp(kawalptn-db.internal:3306)/kawalptn?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "kawal:kawal123@tcp(kawalptn-db.fly.dev:3306)/kawalptn?charset=utf8mb4&parseTime=True&loc=Local"
 	conn, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("could not connect to database")
