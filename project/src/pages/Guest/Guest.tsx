@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, RefObject } from 'react';
 import { Check, Star, Clock, Users, BookOpen, X, AlertTriangleIcon } from 'lucide-react';
 import Modal from 'react-modal';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // Modal.setAppElement('#root');
 
@@ -51,6 +51,7 @@ const TryoutPackageCard = ({
     const [isOpenModal, setOpenDetail] = useState(false);
     const openModal = () => setOpenDetail(true);
     const closeModal = () => setOpenDetail(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -234,7 +235,7 @@ const TryoutPackageCard = ({
                     <AlertTriangleIcon className="mx-auto mb-4 h-14 w-14 text-red-500" />
                     <h2 className='text-xl font-bold text-gray-800 mb-4'>Ops</h2>
                     <p className='text-gray-600 mb-6'>{paymentMessage}</p>
-                    <button onClick={() => setPaymentOpen(false)} className='w-full py-2 px-4 bg-teal-500 text-white rounded-md font-medium hover:bg-teal-600 transition-all duration-300'>Tutup</button>
+                    <button onClick={() => { setPaymentOpen(false); navigate('/loginsiswa');}} className='w-full py-2 px-4 bg-teal-500 text-white rounded-md font-medium hover:bg-teal-600 transition-all duration-300'>Tutup</button>
                 </div>
             </Modal>
         </div>
@@ -246,6 +247,12 @@ export default function Guest() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visiblePackages, setVisiblePackages] = useState<number>(3);
+    const testimoni = useRef(null);
+    const blog = useRef(null);
+
+    const scrollTo = (ref : RefObject<HTMLElement>) => {
+        ref.current?.scrollIntoView({ behavior: 'smooth' });
+      };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -270,7 +277,7 @@ export default function Guest() {
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
-            <header className="bg-teal-500 p-4 flex justify-between items-center">
+            <header className="fixed top-0 left-0 w-full bg-teal-500 backdrop-blur-md p-4 flex justify-between items-center shadow-md transition-all duration-300 z-50">
                 <div className="flex items-center">
                     <img
                         src="/kawalbg.png"
@@ -280,6 +287,14 @@ export default function Guest() {
                     <div className="text-white font-bold">
                         Selamat Datang di Kawal PTN
                     </div>
+                </div>
+                <div className="text-white font-bold">
+                    <button onClick={() => scrollTo(testimoni)} className="hover:animate-pulse hover:underline mr-4">
+                        Testimoni
+                    </button>
+                    <button onClick={() => scrollTo(blog)} className="hover:animate-pulse hover:underline mr-4">
+                        Blog
+                    </button>
                 </div>
                 <button className="bg-white text-teal-500 px-4 py-2 rounded-md flex items-center text-sm">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -292,7 +307,7 @@ export default function Guest() {
                 </button>
             </header>
 
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-16">
                 <div className="max-w-4xl mx-auto">
                     <img
                         src="/Poster.jpg"
@@ -311,7 +326,7 @@ export default function Guest() {
                             className="w-full rounded-md shadow-md"
                         />
                     </div>
-                    <div className="w-full md:w-2/3">
+                    <div ref={testimoni} className="w-full md:w-2/3">
                         <div className="text-teal-500 text-sm uppercase font-semibold">ABOUT KAWAL PTN</div>
                         <h1 className="text-2xl font-bold mb-4">Welcome to KAWAL PTN</h1>
                         <p className="text-gray-700 mb-4 text-sm">
