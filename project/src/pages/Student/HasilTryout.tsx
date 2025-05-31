@@ -195,8 +195,8 @@ const HasilTryout = () => {
     useEffect(() => {
         const fetchData = async () => {
           const endpoints = [
-            { url: "http://localhost:8000/admin/listStudent", setter: setTotalStudents },
-            { url: "http://localhost:8000/admin/listSekolah", setter: setTotalSchool },
+            { url: "https://52.205.255.169/admin/listStudent", setter: setTotalStudents },
+            { url: "https://52.205.255.169/admin/listSekolah", setter: setTotalSchool },
           ];
           for (const { url, setter } of endpoints) {
             try {
@@ -220,7 +220,7 @@ const HasilTryout = () => {
             setLoading(true);
             setError('');
             try {
-            const response = await axios.get(`http://localhost:8000/student/profile`, {
+            const response = await axios.get(`https://52.205.255.169/student/profile`, {
                 withCredentials: true,
             });
 
@@ -241,16 +241,16 @@ const HasilTryout = () => {
             setPilihan2IdAktual(pilihan2AktualId);            
 
             if (sekolahId) {
-                const sekolahRes = await axios.get(`http://localhost:8000/admin/viewSekolah/${sekolahId}`);
+                const sekolahRes = await axios.get(`https://52.205.255.169/admin/viewSekolah/${sekolahId}`);
                 const namaSekolah = sekolahRes.data.sekolah;
                 setAsalSekolah(namaSekolah);
             }
 
             if (pilihan1Id) {
-                const pilihan1Res = await axios.get(`http://localhost:8000/admin/viewMajor/${pilihan1Id}`);
+                const pilihan1Res = await axios.get(`https://52.205.255.169/admin/viewMajor/${pilihan1Id}`);
                 const namaPilihan1 = pilihan1Res.data.nama_prodi_ptn;
                 setPilihan1(namaPilihan1);
-                const dayaTampung1Res = await axios.get(`http://localhost:8000/admin/viewCapacity/${pilihan1Id}`);
+                const dayaTampung1Res = await axios.get(`https://52.205.255.169/admin/viewCapacity/${pilihan1Id}`);
                 const dayaTampung1 = dayaTampung1Res.data[0]?.daya_tampung;
                 setDayaTampung1(dayaTampung1);
                 const peminat1 = dayaTampung1Res.data[0]?.peminat;
@@ -258,10 +258,10 @@ const HasilTryout = () => {
             }
 
             if (pilihan2Id) {
-                const pilihan2Res = await axios.get(`http://localhost:8000/admin/viewMajor/${pilihan2Id}`);
+                const pilihan2Res = await axios.get(`https://52.205.255.169/admin/viewMajor/${pilihan2Id}`);
                 const namaPilihan2 = pilihan2Res.data.nama_prodi_ptn;
                 setPilihan2(namaPilihan2);
-                const dayaTampung2Res = await axios.get(`http://localhost:8000/admin/viewCapacity/${pilihan2Id}`);
+                const dayaTampung2Res = await axios.get(`https://52.205.255.169/admin/viewCapacity/${pilihan2Id}`);
                 const dayaTampung2 = dayaTampung2Res.data[0]?.daya_tampung;
                 setDayaTampung2(dayaTampung2);
                 const peminat2 = dayaTampung2Res.data[0]?.peminat;
@@ -269,10 +269,10 @@ const HasilTryout = () => {
             }
 
             if (pilihan1AktualId) {
-                const pilihan1AktualRes = await axios.get(`http://localhost:8000/admin/viewMajor/${pilihan1AktualId}`);
+                const pilihan1AktualRes = await axios.get(`https://52.205.255.169/admin/viewMajor/${pilihan1AktualId}`);
                 const namaPilihanAktual1 = pilihan1AktualRes.data.nama_prodi_ptn;
                 setPilihan1Aktual(namaPilihanAktual1);
-                const dayaTampung1AktualRes = await axios.get(`http://localhost:8000/admin/viewCapacity/${pilihan1AktualId}`);
+                const dayaTampung1AktualRes = await axios.get(`https://52.205.255.169/admin/viewCapacity/${pilihan1AktualId}`);
                 const dayaTampung1Aktual = dayaTampung1AktualRes.data[0]?.daya_tampung;
                 setDayaTampung1Aktual(dayaTampung1Aktual);
                 const peminat1Aktual = dayaTampung1AktualRes.data[0]?.peminat;
@@ -280,10 +280,10 @@ const HasilTryout = () => {
             }
 
             if (pilihan2AktualId) {
-                const pilihan2AktualRes = await axios.get(`http://localhost:8000/admin/viewMajor/${pilihan2AktualId}`);
+                const pilihan2AktualRes = await axios.get(`https://52.205.255.169/admin/viewMajor/${pilihan2AktualId}`);
                 const namaPilihanAktual2 = pilihan2AktualRes.data.nama_prodi_ptn;
                 setPilihan2Aktual(namaPilihanAktual2);
-                const dayaTampung2AktualRes = await axios.get(`http://localhost:8000/admin/viewCapacity/${pilihan2AktualId}`);
+                const dayaTampung2AktualRes = await axios.get(`https://52.205.255.169/admin/viewCapacity/${pilihan2AktualId}`);
                 const dayaTampung2Aktual = dayaTampung2AktualRes.data[0]?.daya_tampung;
                 setDayaTampung2Aktual(dayaTampung2Aktual);
                 const peminat2Aktual = dayaTampung2AktualRes.data[0]?.peminat;
@@ -303,7 +303,7 @@ const HasilTryout = () => {
     useEffect(() => {
         const fetchScore = async () => {
             try {
-                const res = await fetch(`http://localhost:8000/admin/viewScoreYear/${idUsers}`);
+                const res = await fetch(`https://52.205.255.169/admin/viewScoreYear/${idUsers}`);
                 const data = await res.json();
                 if (!Array.isArray(data) || data.length === 0) {
                     throw new Error("Data nilai tidak ditemukan.");
@@ -346,7 +346,7 @@ const HasilTryout = () => {
             try{
                 if (!pilihan1Id) return;
 
-                axios.get(`http://localhost:8000/admin/listScoreHigh/1/${pilihan1Id}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHigh/1/${pilihan1Id}`)
                     .then(response => {
                         const siswaList: Siswa1[] = response.data.siswa;
                         const nilaiList: Nilai1[] = response.data.nilai;
@@ -370,7 +370,7 @@ const HasilTryout = () => {
             };
 
             try{
-                axios.get(`http://localhost:8000/admin/listScoreHighAll/${pilihan1Id}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHighAll/${pilihan1Id}`)
                     .then(response => {
                         const siswaList: Siswa1All[] = response.data.siswa;
                         const nilaiList: Nilai1All[] = response.data.nilai;
@@ -398,7 +398,7 @@ const HasilTryout = () => {
             try{
                 if (!pilihan2Id) return;
 
-                axios.get(`http://localhost:8000/admin/listScoreHigh/2/${pilihan2Id}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHigh/2/${pilihan2Id}`)
                     .then(response => {
                         const siswaList: Siswa2[] = response.data.siswa;
                         const nilaiList: Nilai2[] = response.data.nilai;
@@ -422,7 +422,7 @@ const HasilTryout = () => {
             };
 
             try{
-                axios.get(`http://localhost:8000/admin/listScoreHighAll/${pilihan2Id}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHighAll/${pilihan2Id}`)
                     .then(response => {
                         const siswaList: Siswa2All[] = response.data.siswa;
                         const nilaiList: Nilai2All[] = response.data.nilai;
@@ -450,7 +450,7 @@ const HasilTryout = () => {
             try{
                 if (!pilihan1IdAktual) return;
 
-                axios.get(`http://localhost:8000/admin/listScoreHigh/3/${pilihan1IdAktual}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHigh/3/${pilihan1IdAktual}`)
                     .then(response => {
                         const siswaList: Siswa3[] = response.data.siswa;
                         const nilaiList: Nilai3[] = response.data.nilai;
@@ -474,7 +474,7 @@ const HasilTryout = () => {
             };
 
             try{
-                axios.get(`http://localhost:8000/admin/listScoreHighAll/${pilihan1IdAktual}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHighAll/${pilihan1IdAktual}`)
                     .then(response => {
                         const siswaList: Siswa3All[] = response.data.siswa;
                         const nilaiList: Nilai3All[] = response.data.nilai;
@@ -502,7 +502,7 @@ const HasilTryout = () => {
             try{
                 if (!pilihan1IdAktual) return;
 
-                axios.get(`http://localhost:8000/admin/listScoreHigh/4/${pilihan2IdAktual}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHigh/4/${pilihan2IdAktual}`)
                     .then(response => {
                         const siswaList: Siswa4[] = response.data.siswa;
                         const nilaiList: Nilai4[] = response.data.nilai;
@@ -526,7 +526,7 @@ const HasilTryout = () => {
             };
 
             try{
-                axios.get(`http://localhost:8000/admin/listScoreHighAll/${pilihan2IdAktual}`)
+                axios.get(`https://52.205.255.169/admin/listScoreHighAll/${pilihan2IdAktual}`)
                     .then(response => {
                         const siswaList: Siswa4All[] = response.data.siswa;
                         const nilaiList: Nilai4All[] = response.data.nilai;
@@ -567,7 +567,7 @@ const HasilTryout = () => {
     useEffect(() => {
         const fetchPtn = async () => {
         try {
-            const universityRes = await axios.get("http://localhost:8000/admin/listUniversity");
+            const universityRes = await axios.get("https://52.205.255.169/admin/listUniversity");
             setUniversityList(universityRes.data || []);
         } catch (error) {
             console.error("Error fetching universities:", error);
@@ -587,7 +587,7 @@ const HasilTryout = () => {
 
         try {
             setLoading(true);
-            const prodi1Res = await axios.get(`http://localhost:8000/admin/listMajor/${selectedMajor1}`);
+            const prodi1Res = await axios.get(`https://52.205.255.169/admin/listMajor/${selectedMajor1}`);
             const majorData = prodi1Res.data.data.map((item: any) => ({
             id_prodi: item.id_prodi,
             nama_prodi: item.nama_prodi,
@@ -639,22 +639,22 @@ const HasilTryout = () => {
         setErrorSimulation("");
 
         try {
-            const majorRes = await axios.get(`http://localhost:8000/admin/viewMajor/${selectedMajorId}`);
+            const majorRes = await axios.get(`https://52.205.255.169/admin/viewMajor/${selectedMajorId}`);
             setSimulatedMajorName(majorRes.data.nama_prodi_ptn);
 
-            const capacityRes = await axios.get(`http://localhost:8000/admin/viewCapacity/${selectedMajorId}`);
+            const capacityRes = await axios.get(`https://52.205.255.169/admin/viewCapacity/${selectedMajorId}`);
             const { daya_tampung, peminat } = capacityRes.data[0] || {};
             setSimulatedDayaTampung(daya_tampung || 0);
             setSimulatedPeminat(peminat || "");
 
-            const userScoreRes = await fetch(`http://localhost:8000/admin/viewScoreYear/${idUsers}`);
+            const userScoreRes = await fetch(`https://52.205.255.169/admin/viewScoreYear/${idUsers}`);
             const userScoreData = await userScoreRes.json();
             if (!Array.isArray(userScoreData) || userScoreData.length === 0) {
                 throw new Error("Data nilai pengguna tidak ditemukan.");
             }
             const userTotalScore = userScoreData[0].total || 0;
 
-            const rankRes = await axios.get(`http://localhost:8000/admin/listScoreHighSimulation/${selectedMajorId}`);
+            const rankRes = await axios.get(`https://52.205.255.169/admin/listScoreHighSimulation/${selectedMajorId}`);
             const siswaList: Siswa1[] = rankRes.data.siswa;
             const nilaiList: Nilai1[] = rankRes.data.nilai;
 
@@ -685,7 +685,7 @@ const HasilTryout = () => {
             const siswaRank = siswaWithNilai.findIndex((siswa: Siswa1) => siswa.id === idUsers) + 1;
             setSimulatedRank(siswaRank);
 
-            const rankAllRes = await axios.get(`http://localhost:8000/admin/listScoreHighAll/${selectedMajorId}`);
+            const rankAllRes = await axios.get(`https://52.205.255.169/admin/listScoreHighAll/${selectedMajorId}`);
             const siswaListAll: Siswa1All[] = rankAllRes.data.siswa;
             const nilaiListAll: Nilai1All[] = rankAllRes.data.nilai;
 

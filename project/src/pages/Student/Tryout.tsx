@@ -16,7 +16,7 @@ const Tryout: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/student/myPacket", {
+        const response = await axios.get("https://52.205.255.169/student/myPacket", {
         withCredentials: true,
       });
 
@@ -26,7 +26,7 @@ const Tryout: React.FC = () => {
         packets.map(async (packet: { id: string; id_paket: number }) => {
           try {
             const paketResponse = await axios.get(
-              `http://localhost:8000/admin/viewPacket/${packet.id_paket}`
+              `https://52.205.255.169/admin/viewPacket/${packet.id_paket}`
             );
             return {
               ...packet,

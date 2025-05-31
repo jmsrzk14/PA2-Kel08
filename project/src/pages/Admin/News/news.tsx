@@ -33,7 +33,7 @@ const NewsContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/admin/listNews");
+        const response = await fetch("https://52.205.255.169/admin/listNews");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: NewsPackage[] = await response.json();
         setNews(data);
@@ -69,7 +69,7 @@ const NewsContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`http://localhost:8000/admin/listNews/${id}`, {
+          const response = await fetch(`https://52.205.255.169/admin/listNews/${id}`, {
             method: "DELETE",
             credentials: "include",
           });

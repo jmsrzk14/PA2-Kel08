@@ -18,7 +18,7 @@ const TambahPengumuman = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`http://localhost:8000/admin/profile`, {
+        const response = await axios.get(`https://52.205.255.169/admin/profile`, {
           withCredentials: true,
         });
   
@@ -47,7 +47,7 @@ const TambahPengumuman = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("http://localhost:8000/admin/createAnnouncement", {
+      const response = await fetch("https://52.205.255.169/admin/createAnnouncement", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

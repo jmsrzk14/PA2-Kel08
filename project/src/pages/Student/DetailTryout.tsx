@@ -66,7 +66,7 @@ const DetailTryout = () => {
       scoreText(`${nilaiMap["Literasi Bahasa Inggris"]}`, 675, 61);
       scoreText(`${nilaiMap["Penalaran Matematika"]}`, 675, 35.6);
 
-      const imagePath = `http://localhost:8000/${foto}`;
+      const imagePath = `https://52.205.255.169/${foto}`;
       const imageRes = await fetch(imagePath);
       
       if (!imageRes.ok) throw new Error('Gagal mengunduh gambar');
@@ -107,7 +107,7 @@ const DetailTryout = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`http://localhost:8000/student/profile`, {
+        const response = await axios.get(`https://52.205.255.169/student/profile`, {
           withCredentials: true,
         });
 
@@ -134,7 +134,7 @@ const DetailTryout = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`http://localhost:8000/admin/viewSekolah/${idSekolah}`);
+        const response = await axios.get(`https://52.205.255.169/admin/viewSekolah/${idSekolah}`);
         const data = response.data;
         setNamaSekolah(data.sekolah);
       } catch (error) {
@@ -153,8 +153,8 @@ const DetailTryout = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const paymentRes = await fetch(`http://localhost:8000/admin/viewPaymentCourses/${id}`);
-        const paymentNameRes = await fetch(`http://localhost:8000/admin/viewPayment/${id}`);
+        const paymentRes = await fetch(`https://52.205.255.169/admin/viewPaymentCourses/${id}`);
+        const paymentNameRes = await fetch(`https://52.205.255.169/admin/viewPayment/${id}`);
         const paymentData = await paymentRes.json();
         const paymentNameData = await paymentNameRes.json();
 
@@ -162,7 +162,7 @@ const DetailTryout = () => {
         const tahun = new Date().getFullYear().toString();
         setNamaPaket(paymentNameData.id_paket);
 
-        const res = await fetch(`http://localhost:8000/admin/viewScoreDetail/${tahun}/${idUsers}/${idPacket}`);
+        const res = await fetch(`https://52.205.255.169/admin/viewScoreDetail/${tahun}/${idUsers}/${idPacket}`);
         const json = await res.json();
 
         if (!Array.isArray(json) || json.length === 0) {

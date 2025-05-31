@@ -75,7 +75,7 @@ function EditProfil() {
     useEffect(() => {
         const fetchWilayah = async () => {
             try {
-                const provinsiRes = await axios.get("http://localhost:8000/admin/region/province");
+                const provinsiRes = await axios.get("https://52.205.255.169/admin/region/province");
                 setProvinsiList(provinsiRes.data || []);
             } catch (error) {
                 console.error("Error fetching wilayah:", error);
@@ -93,7 +93,7 @@ function EditProfil() {
         setKecamatanList([]);
         setSchoolList([]);
     
-        const kabRes = await axios.get(`http://localhost:8000/admin/region/regency/${selected.value}`);
+        const kabRes = await axios.get(`https://52.205.255.169/admin/region/regency/${selected.value}`);
         setKabupatenList(kabRes.data || []);
     };
     
@@ -103,7 +103,7 @@ function EditProfil() {
         setKecamatanList([]);
         setSchoolList([]);
     
-        const kecRes = await axios.get(`http://localhost:8000/admin/region/subdistrict/${selected.value}`);
+        const kecRes = await axios.get(`https://52.205.255.169/admin/region/subdistrict/${selected.value}`);
         setKecamatanList(kecRes.data || []);
     };
 
@@ -123,7 +123,7 @@ function EditProfil() {
 
         try {
             const sekolahRes = await axios.get(
-                `http://localhost:8000/admin/listSekolah/${selectedProvinsi}/${selectedKabupaten}/${kecamatanId}`
+                `https://52.205.255.169/admin/listSekolah/${selectedProvinsi}/${selectedKabupaten}/${kecamatanId}`
             );
 
             const sekolahData = sekolahRes.data.data.map((item: any) => ({
@@ -141,7 +141,7 @@ function EditProfil() {
     useEffect(() => {
         const fetchPtn = async () => {
             try {
-                const universityRes = await axios.get("http://localhost:8000/admin/listUniversity");
+                const universityRes = await axios.get("https://52.205.255.169/admin/listUniversity");
                 setUniversityList(universityRes.data || []);
             } catch (error) {
                 console.error("Error fetching wilayah:", error);
@@ -167,7 +167,7 @@ function EditProfil() {
 
         try {
             const prodi1Res = await axios.get(
-                `http://localhost:8000/admin/listMajor/${pilihan1Id}`
+                `https://52.205.255.169/admin/listMajor/${pilihan1Id}`
             );
 
             const majorData = prodi1Res.data.data.map((item: any) => ({
@@ -198,7 +198,7 @@ function EditProfil() {
 
         try {
             const prodi2Res = await axios.get(
-                `http://localhost:8000/admin/listMajor/${pilihan2Id}`
+                `https://52.205.255.169/admin/listMajor/${pilihan2Id}`
             );
 
             const majorData = prodi2Res.data.data.map((item: any) => ({
@@ -229,7 +229,7 @@ function EditProfil() {
 
         try {
             const prodi3Res = await axios.get(
-                `http://localhost:8000/admin/listMajor/${pilihan3Id}`
+                `https://52.205.255.169/admin/listMajor/${pilihan3Id}`
             );
 
             const majorData = prodi3Res.data.data.map((item: any) => ({
@@ -260,7 +260,7 @@ function EditProfil() {
 
         try {
             const prodi4Res = await axios.get(
-                `http://localhost:8000/admin/listMajor/${pilihan4Id}`
+                `https://52.205.255.169/admin/listMajor/${pilihan4Id}`
             );
 
             const majorData = prodi4Res.data.data.map((item: any) => ({
@@ -280,7 +280,7 @@ function EditProfil() {
             setLoading(true);
             setError("");
             try {
-                const response = await axios.get("http://localhost:8000/student/profile", {
+                const response = await axios.get("https://52.205.255.169/student/profile", {
                     withCredentials: true,
                 });
                 const data = response.data.data;
@@ -401,7 +401,7 @@ function EditProfil() {
                     });
 
                     axios.put(
-                        `http://localhost:8000/student/update/${studentData.id}`,
+                        `https://52.205.255.169/student/update/${studentData.id}`,
                         params.toString(),
                         {
                             withCredentials: true,
@@ -437,7 +437,7 @@ function EditProfil() {
 
                 // Kirim data tanpa foto
                 await axios.put(
-                    `http://localhost:8000/student/update/${studentData.id}`,
+                    `https://52.205.255.169/student/update/${studentData.id}`,
                     params.toString(),
                     {
                         withCredentials: true,

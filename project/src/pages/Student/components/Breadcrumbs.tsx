@@ -22,7 +22,7 @@ const Breadcrumbs: React.FC = () => {
   useEffect(() => {
     const fetchAnnouncementName = async (id: string) => {
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewAnnouncement/${id}`);
+        const response = await fetch(`https://52.205.255.169/admin/viewAnnouncement/${id}`);
         if (response.ok) {
           const data = await response.json();
           setAnnouncementName(data.judul);
@@ -34,7 +34,7 @@ const Breadcrumbs: React.FC = () => {
     
     const fetchTryoutName = async (id: string) => {
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewPayment/${id}`);
+        const response = await fetch(`https://52.205.255.169/admin/viewPayment/${id}`);
         if (response.ok) {
           const data = await response.json();
           setNamaPaket(data.id_paket);

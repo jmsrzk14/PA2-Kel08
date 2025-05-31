@@ -55,7 +55,7 @@ function Profil() {
             setLoading(true);
             setError("");
             try {
-                const response = await axios.get("http://localhost:8000/student/profile", {
+                const response = await axios.get("https://52.205.255.169/student/profile", {
                     withCredentials: true,
                 });
                 const data = response.data.data;
@@ -89,11 +89,11 @@ function Profil() {
                 });
 
                 const [sekolahRes, prodi1Res, prodi2Res, prodi1AktualRes, prodi2AktualRes] = await Promise.all([
-                    axios.get(`http://localhost:8000/admin/viewSekolah/${data.asal_sekolah}`),
-                    axios.get(`http://localhost:8000/admin/viewMajor/${data.pilihan1_utbk}`),
-                    axios.get(`http://localhost:8000/admin/viewMajor/${data.pilihan2_utbk}`),
-                    axios.get(`http://localhost:8000/admin/viewMajor/${data.pilihan1_utbk_aktual}`),
-                    axios.get(`http://localhost:8000/admin/viewMajor/${data.pilihan2_utbk_aktual}`),
+                    axios.get(`https://52.205.255.169/admin/viewSekolah/${data.asal_sekolah}`),
+                    axios.get(`https://52.205.255.169/admin/viewMajor/${data.pilihan1_utbk}`),
+                    axios.get(`https://52.205.255.169/admin/viewMajor/${data.pilihan2_utbk}`),
+                    axios.get(`https://52.205.255.169/admin/viewMajor/${data.pilihan1_utbk_aktual}`),
+                    axios.get(`https://52.205.255.169/admin/viewMajor/${data.pilihan2_utbk_aktual}`),
                 ]);
 
                 setDisplayNames({
@@ -116,7 +116,7 @@ function Profil() {
 
         const fetchSchools = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/admin/listSekolah", {
+                const response = await axios.get("https://52.205.255.169/admin/listSekolah", {
                     withCredentials: true,
                 });
                 setSchoolList(response.data || []);
@@ -149,7 +149,7 @@ function Profil() {
             console.log(studentData.id);
             
             await axios.put(
-                `http://localhost:8000/student/update/${studentData.id}`,
+                `https://52.205.255.169/student/update/${studentData.id}`,
                 params.toString(),
                 {
                     withCredentials: true,
@@ -221,7 +221,7 @@ function Profil() {
                             </div>
                         </div>
                         <div className="w-1/4">
-                            <img className="w-[7em] h-auto mt-4 ml-5" src={`http://localhost:8000/${studentData.foto?.replace(/\\/g, "/")}`} />
+                            <img className="w-[7em] h-auto mt-4 ml-5" src={`https://52.205.255.169/${studentData.foto?.replace(/\\/g, "/")}`} />
                         </div>
                     </div>
                 </div>

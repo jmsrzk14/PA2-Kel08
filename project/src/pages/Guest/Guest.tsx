@@ -55,7 +55,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch("http://localhost:8000/student/profile", {
+                const response = await fetch("https://52.205.255.169/student/profile", {
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -104,7 +104,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await fetch("http://localhost:8000/student/sendPayment", {
+                        await fetch("https://52.205.255.169/student/sendPayment", {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -250,7 +250,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:8000/admin/listPacket");
+                const response = await fetch("https://52.205.255.169/admin/listPacket");
                 if (!response.ok) throw new Error("Data tidak ditemukan!");
                 const data: CoursePackage[] = await response.json();
                 setPackages(data);
@@ -264,9 +264,8 @@ export default function Guest() {
         fetchData();
     }, []);
 
-    // Function to handle "Lihat Paket Lebih Banyak" button
     const handleShowMore = () => {
-        setVisiblePackages((prev) => prev + 3); // Show 3 more packages each time
+        setVisiblePackages((prev) => prev + 3);
     };
 
     return (
@@ -413,7 +412,6 @@ export default function Guest() {
                         </div>
                     ) : error ? (
                         <div className="text-center py-8">
-                            <p className="text-red-500">Gagal memuat paket: {error}</p>
                         </div>
                     ) : (
                         <>

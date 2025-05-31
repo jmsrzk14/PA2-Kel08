@@ -75,14 +75,14 @@ const PersebaranContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8000/admin/listMajor");
+        const response = await fetch("https://52.205.255.169/admin/listMajor");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: Prodi[] = await response.json();
 
         const prodiWithCapacity = await Promise.all(
           data.map(async (item) => {
             try {
-              const capacityResponse = await fetch(`http://localhost:8000/admin/viewCapacity/${item.id_prodi}`);
+              const capacityResponse = await fetch(`https://52.205.255.169/admin/viewCapacity/${item.id_prodi}`);
               if (!capacityResponse.ok) throw new Error("Gagal mengambil kapasitas");
               const capacityData = await capacityResponse.json();
               return {

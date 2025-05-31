@@ -34,7 +34,7 @@ const LoginStudent: React.FC<LoginProps> = ({ setIsAuthenticated, setUserRole })
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/student/login', {
+      const response = await axios.post('https://52.205.255.169/student/login', {
         username,
         password
       },

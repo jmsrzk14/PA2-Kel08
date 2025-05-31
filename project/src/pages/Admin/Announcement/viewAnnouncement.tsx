@@ -15,7 +15,7 @@ const LihatPaket = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewAnnouncement/${id}`);
+        const response = await fetch(`https://52.205.255.169/admin/viewAnnouncement/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data pengumuman');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -24,7 +24,7 @@ const LihatPaket = () => {
         setDeskripsi(data.deskripsi);
         setIdUsers(data.id_users);
 
-        const userRes = await fetch(`http://localhost:8000/admin/listUser/${data.id_users}`);
+        const userRes = await fetch(`https://52.205.255.169/admin/listUser/${data.id_users}`);
         if (!userRes.ok) throw new Error('Gagal mengambil data user');
         const userData = await userRes.json();
         setNamaUser(userData.nama);

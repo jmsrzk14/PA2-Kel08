@@ -14,7 +14,7 @@ const LihatBerita = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewNews/${id}`);
+        const response = await fetch(`https://52.205.255.169/admin/viewNews/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log(data);
@@ -47,7 +47,7 @@ const LihatBerita = () => {
             dangerouslySetInnerHTML={{ __html: deskripsi }}
           />
           <div className="w-1/4">
-            <img className="w-[50em] h-auto mt-4" src={`http://localhost:8000/${foto?.replace(/\\/g, "/")}`} />
+            <img className="w-[50em] h-auto mt-4" src={`https://52.205.255.169/${foto?.replace(/\\/g, "/")}`} />
           </div>
       </div>
     </div>

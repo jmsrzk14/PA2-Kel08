@@ -14,7 +14,7 @@ const LihatBerita = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`http://localhost:8000/admin/viewTesti/${id}`);
+        const response = await fetch(`https://52.205.255.169/admin/viewTesti/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data testi');
         const data = await response.json();
         console.log(data);
@@ -41,7 +41,7 @@ const LihatBerita = () => {
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">{nama}</h1>
-      <img className="w-[7em] h-auto mb-6" src={`http://localhost:8000/${foto?.replace(/\\/g, "/")}`} />
+      <img className="w-[7em] h-auto mb-6" src={`https://52.205.255.169/${foto?.replace(/\\/g, "/")}`} />
       <div className="flex flex-row bg-gray-100 p-4 rounded-md space-y-4">
         <div
           className="mt-2 prose prose-sm max-w-none"

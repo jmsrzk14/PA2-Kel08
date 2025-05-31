@@ -54,7 +54,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get("http://localhost:8000/student/profile", {
+                const response = await axios.get("https://52.205.255.169/student/profile", {
                     withCredentials: true 
                 });
                 const data = response.data;
@@ -96,7 +96,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await axios.post("http://localhost:8000/student/sendPayment", dataToSend, {
+                        await axios.post("https://52.205.255.169/student/sendPayment", dataToSend, {
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
@@ -231,7 +231,7 @@ const Paket = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-        const response = await fetch("http://localhost:8000/admin/listPacket");
+        const response = await fetch("https://52.205.255.169/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
             if (!Array.isArray(data)) {
