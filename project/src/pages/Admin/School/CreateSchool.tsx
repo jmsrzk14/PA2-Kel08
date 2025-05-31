@@ -19,7 +19,7 @@ const TambahSekolah = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("https://52.205.255.169/admin/region/province")
+    fetch("https://kawalptn.store/admin/region/province")
       .then(res => res.json())
       .then(data => {
         const formatted = data.map((prov) => ({
@@ -32,7 +32,7 @@ const TambahSekolah = () => {
 
   useEffect(() => {
     if (provinsi) {
-      fetch(`https://52.205.255.169/admin/region/regency/${provinsi.value}`)
+      fetch(`https://kawalptn.store/admin/region/regency/${provinsi.value}`)
         .then(res => res.json())
         .then(data => {
           const formatted = data.map((kab) => ({
@@ -49,7 +49,7 @@ const TambahSekolah = () => {
 
   useEffect(() => {
     if (kabupaten) {
-      fetch(`https://52.205.255.169/admin/region/subdistrict/${kabupaten.value}`)
+      fetch(`https://kawalptn.store/admin/region/subdistrict/${kabupaten.value}`)
         .then(res => res.json())
         .then(data => {
           const formatted = data.map((kec) => ({
@@ -77,7 +77,7 @@ const TambahSekolah = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      await fetch("https://52.205.255.169/admin/createSekolah", {
+      await fetch("https://kawalptn.store/admin/createSekolah", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

@@ -18,7 +18,7 @@ const TambahPengumuman = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`https://52.205.255.169/admin/profile`, {
+        const response = await axios.get(`https://kawalptn.store/admin/profile`, {
           withCredentials: true,
         });
   
@@ -47,7 +47,7 @@ const TambahPengumuman = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("https://52.205.255.169/admin/createAnnouncement", {
+      const response = await fetch("https://kawalptn.store/admin/createAnnouncement", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

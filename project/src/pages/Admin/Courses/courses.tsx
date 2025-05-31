@@ -35,7 +35,7 @@ const CoursesContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://52.205.255.169/admin/listPacket");
+        const response = await fetch("https://kawalptn.store/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
         setPackages(data);
@@ -71,7 +71,7 @@ const CoursesContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://52.205.255.169/admin/listPacket/${id}`, {
+          const response = await fetch(`https://kawalptn.store/admin/listPacket/${id}`, {
             method: "DELETE",
             credentials: "include",
           });

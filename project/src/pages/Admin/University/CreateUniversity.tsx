@@ -21,7 +21,7 @@ const TambahPtn = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("https://52.205.255.169/admin/createUniversity", {
+      const response = await fetch("https://kawalptn.store/admin/createUniversity", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

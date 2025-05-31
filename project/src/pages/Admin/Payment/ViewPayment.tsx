@@ -31,7 +31,7 @@ const LihatPembayaran = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`https://52.205.255.169/admin/viewPayment/${id}`);
+        const response = await fetch(`https://kawalptn.store/admin/viewPayment/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data Pembayaran');
         const data = await response.json();
         console.log("Data dari API:", data);

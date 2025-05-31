@@ -17,7 +17,7 @@ const TambahDayaTampung = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await fetch(`https://52.205.255.169/admin/viewMajor/${id_prodi}`);
+        const response = await fetch(`https://kawalptn.store/admin/viewMajor/${id_prodi}`);
         if (!response.ok) throw new Error('Gagal mengambil data prodi');
         const data = await response.json();
         setNamaProdi(data.nama_prodi_ptn);
@@ -44,7 +44,7 @@ const TambahDayaTampung = () => {
     formData.append("peminat", peminat);
 
     try {
-      const response = await fetch("https://52.205.255.169/admin/createCapacity", {
+      const response = await fetch("https://kawalptn.store/admin/createCapacity", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

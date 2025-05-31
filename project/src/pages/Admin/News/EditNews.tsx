@@ -15,14 +15,14 @@ const EditBerita = () => {
   useEffect(() => {
     const fetchBerita = async () => {
       try {
-        const response = await fetch(`https://52.205.255.169/admin/viewNews/${id}`);
+        const response = await fetch(`https://kawalptn.store/admin/viewNews/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data berita');
         const data = await response.json();
         
         setJudul(data.judul);
         setDeskripsi(data.deskripsi);
         setFoto(data.foto);
-        setPreviewFoto(`https://52.205.255.169/${data.foto?.replace(/\\/g, "/")}`);
+        setPreviewFoto(`https://kawalptn.store/${data.foto?.replace(/\\/g, "/")}`);
       } catch (error) {
         console.error("Error fetching berita:", error);
       }
@@ -67,7 +67,7 @@ const EditBerita = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://52.205.255.169/admin/editNews/${id}`, {
+          const response = await fetch(`https://kawalptn.store/admin/editNews/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",

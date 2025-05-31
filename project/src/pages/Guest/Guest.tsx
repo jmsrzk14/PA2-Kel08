@@ -64,7 +64,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/student/profile", {
+                const response = await fetch("https://kawalptn.store/student/profile", {
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -113,7 +113,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await fetch("https://52.205.255.169/student/sendPayment", {
+                        await fetch("https://kawalptn.store/student/sendPayment", {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -265,13 +265,13 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const testimonialResponse = await fetch("https://52.205.255.169/testimoni");
+                const testimonialResponse = await fetch("https://kawalptn.store/testimoni");
                 if (!testimonialResponse.ok) throw new Error("Data testimoni tidak ditemukan!");
                 const testimonialData: Testimonial[] = await testimonialResponse.json();
                 const formattedTestimonials = testimonialData.map((item) => ({
                     ...item,
                     role: "Siswa SMA",
-                    foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-testimonial.jpg'
+                    foto: item.foto ? `https://kawalptn.store/${item.foto}` : '/default-testimonial.jpg'
                 }));
                 setTestimonials(formattedTestimonials);
             } catch (err) {
@@ -313,7 +313,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/admin/listPacket");
+                const response = await fetch("https://kawalptn.store/admin/listPacket");
                 if (!response.ok) throw new Error("Data tidak ditemukan!");
                 const data: CoursePackage[] = await response.json();
                 setPackages(data);

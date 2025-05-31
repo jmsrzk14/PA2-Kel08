@@ -33,7 +33,7 @@ const TestiContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://52.205.255.169/admin/listTesti");
+        const response = await fetch("https://kawalptn.store/admin/listTesti");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: TestiPackage[] = await response.json();
         setTesti(data);
@@ -69,7 +69,7 @@ const TestiContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://52.205.255.169/admin/listTesti/${id}`, {
+          const response = await fetch(`https://kawalptn.store/admin/listTesti/${id}`, {
             method: "DELETE",
             credentials: "include",
           });
