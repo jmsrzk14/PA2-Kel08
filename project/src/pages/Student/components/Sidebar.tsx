@@ -10,6 +10,7 @@ import {
   ChevronDown,
   ChevronLeft,
   ArrowLeftRight,
+  School,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -39,6 +40,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     { icon: Megaphone, label: 'Pengumuman', path: '/dashboard/student/announcement' },
     { icon: User, label: 'Profil', path: '/dashboard/student/profil' },
     { icon: ArrowLeftRight, label: 'Simulasi', path: '/dashboard/student/hasiltryout' },
+    { icon: School, label: 'Persebaran Prodi', path: '/dashboard/student/persebaran' },
   ];
 
   return (

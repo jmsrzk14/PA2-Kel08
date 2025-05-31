@@ -5,6 +5,8 @@ import CoursesContent from "./Courses/courses";
 import MajorContent from "./Major/major";
 import PtnContent from "./University/ptn";
 import AnnouncementContent from "./Announcement/announcement";
+import NewsContent from "./News/news";
+import TestiContent from "./Testi/testi";
 import SchoolContent from "./School/school";
 import PaymentContent from "./Payment/payment";
 import CreateAnnouncement from "./Announcement/CreateAnnouncement";
@@ -13,6 +15,8 @@ import CreateUniversity from "./University/CreateUniversity";
 import CreateMajor from "./Major/CreateMajor";
 import CreateSchool from "./School/CreateSchool";
 import CreateCapacity from "./Major/CreateCapacity";
+import CreateNews from "./News/CreateNews";
+import CreateTesti from "./Testi/CreateTesti";
 import ScoreStudents from "./Student/CreateScore";
 import UpdateAnnouncement from "./Announcement/editAnnouncement";
 import UpdateCourses from "./Courses/EditCourses";
@@ -20,6 +24,8 @@ import UpdateMajor from "./Major/EditMajor";
 import UpdateUniversity from "./University/EditUniversity";
 import UpdateStudents from "./Student/EditStudents";
 import UpdateSchool from "./School/EditSchool";
+import UpdateNews from "./News/EditNews";
+import UpdateTesti from "./Testi/EditTesti";
 import ViewAnnouncement from "./Announcement/viewAnnouncement"
 import ViewCourses from "./Courses/ViewCourses";
 import ViewMajor from "./Major/ViewMajor";
@@ -27,6 +33,8 @@ import ViewPayment from "./Payment/ViewPayment";
 import ViewStudents from "./Student/ViewStudents";
 import ViewUniversity from "./University/ViewUniversity";
 import ViewSchool from "./School/ViewSchool";
+import ViewNews from "./News/ViewNews"
+import ViewTesti from "./Testi/Viewtesti"
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
 import Breadcrumbs from "../components/Breadcrumbs";
@@ -68,7 +76,7 @@ const DashboardContent: React.FC = () => {
       setStudentChartLoading(true);
       setStudentChartError("");
       try {
-        const response = await fetch("https://160.19.166.155:8000/admin/listStudent");
+        const response = await fetch("http://localhost:8000/admin/listStudent");
         if (!response.ok) throw new Error("Gagal mengambil data students");
         const data: Student[] = await response.json();
         setStudentData(data);
@@ -99,9 +107,9 @@ const DashboardContent: React.FC = () => {
     const fetchData = async () => {
       setLoading(true);
       const endpoints = [
-        { url: "https://160.19.166.155:8000/admin/listPacket", setter: setTotalPackets },
-        { url: "https://160.19.166.155:8000/admin/listUniversity", setter: setTotalUniversity },
-        { url: "https://160.19.166.155:8000/admin/listMajor", setter: setTotalMajor },
+        { url: "http://localhost:8000/admin/listPacket", setter: setTotalPackets },
+        { url: "http://localhost:8000/admin/listUniversity", setter: setTotalUniversity },
+        { url: "http://localhost:8000/admin/listMajor", setter: setTotalMajor },
       ];
   
       for (const { url, setter } of endpoints) {
@@ -219,6 +227,14 @@ const Dashboard: React.FC = () => {
           <Route path="/payment/list" element={<PaymentContent />} />
           <Route path="/payment/viewPayment/:id" element={<ViewPayment />} />
           <Route path="/payment/viewPayment/:id" element={<ViewPayment />} />
+          <Route path="/news/list" element={<NewsContent />} />
+          <Route path="/news/createNews" element={<CreateNews />} />
+          <Route path="/news/viewNews/:id" element={<ViewNews />} />
+          <Route path="/news/editNews/:id" element={<UpdateNews />} />
+          <Route path="/testimoni/list" element={<TestiContent />} />
+          <Route path="/testimoni/createTesti" element={<CreateTesti />} />
+          <Route path="/testimoni/viewTesti/:id" element={<ViewTesti />} />
+          <Route path="/testimoni/editTesti/:id" element={<UpdateTesti />} />
         </Routes>
       </div>
     </div>

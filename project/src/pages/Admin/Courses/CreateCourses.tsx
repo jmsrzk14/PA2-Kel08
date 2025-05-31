@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const TambahProdi = () => {
-  const [namaProdi, setNamaProdi] = useState('');
+  const [namaPaket, setNamaProdi] = useState('');
   const [deskripsi, setDeskripsi] = useState('');
   const [total, setTotal] = useState('');
   const [active, setActive] = useState('');
@@ -21,7 +21,7 @@ const TambahProdi = () => {
     e.preventDefault();
 
     const formData = new URLSearchParams();
-    formData.append("name", namaProdi);
+    formData.append("name", namaPaket);
     formData.append("deskripsi", deskripsi);
     formData.append("total", total.toString());
     formData.append("active", active.toString());
@@ -37,7 +37,7 @@ const TambahProdi = () => {
     console.log("Payload yang dikirim:", formData.toString());
 
     try {
-      const response = await fetch("https://160.19.166.155:8000/admin/createPacket", {
+      const response = await fetch("http://localhost:8000/admin/createPacket", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
@@ -72,7 +72,7 @@ const TambahProdi = () => {
           <input
             type="text"
             className="mt-1 p-2 border rounded w-full"
-            value={namaProdi}
+            value={namaPaket}
             onChange={(e) => setNamaProdi(e.target.value)}
             required
           />

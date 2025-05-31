@@ -50,9 +50,9 @@ const PaymentContent = () => {
     const fetchData = async () => {
       try {
         const [paymentRes, studentRes, packageRes] = await Promise.all([
-          fetch("https://160.19.166.155:8000/admin/listPayment"),
-          fetch("https://160.19.166.155:8000/admin/listStudent"),
-          fetch("https://160.19.166.155:8000/admin/listPacket"),
+          fetch("http://localhost:8000/admin/listPayment"),
+          fetch("http://localhost:8000/admin/listStudent"),
+          fetch("http://localhost:8000/admin/listPacket"),
         ]);
 
         if (!paymentRes.ok || !studentRes.ok || !packageRes.ok) throw new Error("Data tidak ditemukan!");

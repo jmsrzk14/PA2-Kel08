@@ -13,7 +13,7 @@ const EditAnnouncement = () => {
   useEffect(() => {
     const fetchPaket = async () => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewAnnouncement/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewAnnouncement/${id}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -49,7 +49,7 @@ const EditAnnouncement = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://160.19.166.155:8000/admin/editAnnouncement/${id}`, {
+          const response = await fetch(`http://localhost:8000/admin/editAnnouncement/${id}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
@@ -103,7 +103,7 @@ const EditAnnouncement = () => {
             onChange={setDeskripsi}
             theme="snow"
             className="bg-white"
-        />
+          />
         </div>
         <button
           type="submit"

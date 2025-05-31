@@ -51,6 +51,7 @@ func Setup(app *fiber.App) {
 	admin.Get("/listScoreHigh/2/:id_prodi", controllers.ShowScoreByTotal2)
 	admin.Get("/listScoreHigh/3/:id_prodi", controllers.ShowScoreByTotal3)
 	admin.Get("/listScoreHigh/4/:id_prodi", controllers.ShowScoreByTotal4)
+	admin.Get("/listScoreHighSimulation/:id_prodi", controllers.ShowScoreByTotalSimulation)
 	admin.Get("/listScoreHighAll/:id_prodi", controllers.ShowScoreByTotalAll)
 
 	admin.Post("/createAnnouncement", controllers.CreateAnnouncement)
@@ -78,6 +79,18 @@ func Setup(app *fiber.App) {
 	admin.Get("/region/province", controllers.IndexProvince)
 	admin.Get("/region/regency/:id_province", controllers.IndexRegency)
 	admin.Get("/region/subdistrict/:id_regency", controllers.IndexSubdistrict)
+
+	admin.Post("/createNews", controllers.CreateNews)
+	admin.Get("/listNews", controllers.IndexNews)
+	admin.Get("/viewNews/:id", controllers.ShowNews)
+	admin.Put("/editNews/:id", controllers.UpdateNews)
+	admin.Delete("/listNews/:id", controllers.DeleteNews)
+	
+	admin.Post("/createTesti", controllers.CreateTesti)
+	admin.Get("/listTesti", controllers.IndexTesti)
+	admin.Get("/viewTesti/:id", controllers.ShowTesti)
+	admin.Put("/editTesti/:id", controllers.UpdateTesti)
+	admin.Delete("/listTesti/:id", controllers.DeleteTesti)
 
 	student := app.Group("/student")
 	student.Post("/login", studentController.Login)

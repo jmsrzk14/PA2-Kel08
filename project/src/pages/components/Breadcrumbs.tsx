@@ -30,7 +30,13 @@ const breadcrumbMap: { [key: string]: string } = {
   capacity: "Daya Tampung",
   tambahCapacity: "Tambah Daya Tampung",
   score: "Nilai",
-  tambahNilai: "Tambah Nilai"
+  tambahNilai: "Tambah Nilai",
+  createNews: "Tambah Berita",
+  viewNews: "Detail Berita",
+  editNews: "Update Berita",
+  createTesti: "Tambah Berita",
+  viewTesti: "Detail Berita",
+  editTesti: "Update Berita"
 };
 
 const Breadcrumbs: React.FC = () => {
@@ -42,11 +48,13 @@ const Breadcrumbs: React.FC = () => {
   const [majorName, setMajorName] = useState<string | null>(null);
   const [schoolName, setSchoolName] = useState<string | null>(null);
   const [announcementName, setAnnouncementName] = useState<string | null>(null);
+  const [newsName, setNewsName] = useState<string | null>(null);
+  const [testiName, setTestiName] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPackageName = async (id: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewPacket/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewPacket/${id}`);
         if (response.ok) {
           const data = await response.json();
           setPackageName(data.nama_paket);
@@ -58,7 +66,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchStudentName = async (username: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewStudent/${username}`);
+        const response = await fetch(`http://localhost:8000/admin/viewStudent/${username}`);
         if (response.ok) {
           const data = await response.json();
           setStudentName(data.first_name);
@@ -70,7 +78,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchPtnName = async (id: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewUniversity/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewUniversity/${id}`);
         if (response.ok) {
           const data = await response.json();
           setPtnName(data.nama_ptn);
@@ -82,7 +90,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchMajorName = async (id: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewMajor/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewMajor/${id}`);
         if (response.ok) {
           const data = await response.json();
           setMajorName(data.nama_prodi_ptn);
@@ -94,7 +102,7 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchSchoolName = async (id: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewSekolah/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewSekolah/${id}`);
         if (response.ok) {
           const data = await response.json();
           setSchoolName(data.sekolah);
@@ -106,13 +114,37 @@ const Breadcrumbs: React.FC = () => {
 
     const fetchAnnouncementName = async (id: string) => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewAnnouncement/${id}`);
+        const response = await fetch(`http://localhost:8000/admin/viewAnnouncement/${id}`);
         if (response.ok) {
           const data = await response.json();
           setAnnouncementName(data.judul);
         }
       } catch (error) {
         console.error("Failed to fetch Announcement name", error);
+      }
+    };
+
+    const fetchNewsName = async (id: string) => {
+      try {
+        const response = await fetch(`http://localhost:8000/admin/viewNews/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setNewsName(data.judul);
+        }
+      } catch (error) {
+        console.error("Failed to fetch News name", error);
+      }
+    };
+
+    const fetchTestiName = async (id: string) => {
+      try {
+        const response = await fetch(`http://localhost:8000/admin/viewTesti/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setTestiName(data.nama);
+        }
+      } catch (error) {
+        console.error("Failed to fetch Testi name", error);
       }
     };
 
@@ -160,6 +192,18 @@ const Breadcrumbs: React.FC = () => {
     }
     if (pathnames.length > 2 && pathnames[1] === "score" && pathnames[2] === "tambahNilai") {
       fetchStudentName(pathnames[3]);
+    }
+    if (pathnames.length > 2 && pathnames[1] === "news" && pathnames[2] === "viewNews") {
+      fetchNewsName(pathnames[3]);
+    }
+    if (pathnames.length > 2 && pathnames[1] === "news" && pathnames[2] === "editNews") {
+      fetchNewsName(pathnames[3]);
+    }
+    if (pathnames.length > 2 && pathnames[1] === "testimoni" && pathnames[2] === "viewTesti") {
+      fetchTestiName(pathnames[3]);
+    }
+    if (pathnames.length > 2 && pathnames[1] === "testimoni" && pathnames[2] === "editTesti") {
+      fetchTestiName(pathnames[3]);
     }
   }, [pathnames]);
 
@@ -227,6 +271,22 @@ const Breadcrumbs: React.FC = () => {
 
           if (name.match(/\d+/) && studentName && pathnames[index] === "tambahNilai" ) {
             displayName = studentName;
+          }
+
+          if (name.match(/\d+/) && newsName && pathnames[index] === "editNews" ) {
+            displayName = newsName;
+          }
+
+          if (name.match(/\d+/) && newsName && pathnames[index] === "viewNews" ) {
+            displayName = newsName;
+          }
+
+          if (name.match(/\d+/) && testiName && pathnames[index] === "editTesti" ) {
+            displayName = testiName;
+          }
+
+          if (name.match(/\d+/) && testiName && pathnames[index] === "viewTesti" ) {
+            displayName = testiName;
           }
 
           return (

@@ -33,7 +33,7 @@ const AnnouncementContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://160.19.166.155:8000/admin/listAnnouncement");
+        const response = await fetch("http://localhost:8000/admin/listAnnouncement");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: Announcement[] = await response.json();
         setAnnouncement(data);
@@ -69,7 +69,7 @@ const AnnouncementContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://160.19.166.155:8000/admin/listAnnouncement/${id}`, {
+          const response = await fetch(`http://localhost:8000/admin/listAnnouncement/${id}`, {
             method: "DELETE",
             credentials: "include",
           });
@@ -181,14 +181,6 @@ const AnnouncementContent = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* {announcement.map((row, index) => (
-              <TableRow hover tabIndex={-1} key={row.id} align="center">
-                <TableCell>{index + 1}</TableCell>
-                {columns.map((column) => (
-                  <TableCell key={column.id} align="center">
-                    {column.id === "price" ? new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR" }).format(row[column.id]) : row[column.id]}
-                  </TableCell>                
-                ))} */}
             {paginatedData.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} align="center">

@@ -12,6 +12,8 @@ import {
   ChevronLeft,
   Banknote,
   GraduationCap,
+  Newspaper,
+  Quote
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -43,6 +45,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
     { icon: Layers, label: 'Program Studi', path: '/dashboard/major/list' },
     { icon: Banknote, label: 'Pembayaran', path: '/dashboard/payment/list' },
     { icon: Megaphone, label: 'Pengumuman', path: '/dashboard/announcement/list' },
+    { icon: Newspaper, label: 'Berita', path: '/dashboard/news/list' },
+    { icon: Quote, label: 'Testimoni', path: '/dashboard/testimoni/list' },
   ];
 
   return (
@@ -59,7 +63,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, toggleSidebar }) => {
           <MenuIcon size={24} />
         </button>
       </div>
-      <nav className="p-4">
+      <nav className="p-4 overflow-y-auto max-h-[calc(100vh-4rem)] scrollbar-thin scrollbar-thumb-white/50 scrollbar-track-transparent">
         {menuItems.map((item) => (
           <div key={item.label} className="relative" ref={item.children ? dropdownRef : undefined}>
             {item.children ? (

@@ -13,7 +13,7 @@ const EditMajor = () => {
   useEffect(() => {
     const fetchProdi = async () => {
       try {
-        const response = await fetch(`https://160.19.166.155:8000/admin/viewMajor/${id_prodi}`);
+        const response = await fetch(`http://localhost:8000/admin/viewMajor/${id_prodi}`);
         if (!response.ok) throw new Error('Gagal mengambil data paket');
         const data = await response.json();
         console.log("Data dari API:", data);
@@ -53,7 +53,7 @@ const EditMajor = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://160.19.166.155:8000/admin/editMajor/${id_prodi}`, {
+          const response = await fetch(`http://localhost:8000/admin/editMajor/${id_prodi}`, {
             method: "PUT",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",

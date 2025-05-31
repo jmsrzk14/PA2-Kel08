@@ -243,7 +243,10 @@ func ShowScoreByYear(ctx *fiber.Ctx) error {
 
 	var scores []models.T_Nilai
 
-	result := database.DB.Where("year = ? AND id_siswa = ?", Year, idSiswa).First(&scores)
+	result := database.DB.
+		Where("year = ? AND id_siswa = ?", Year, idSiswa).
+		Order("total DESC").
+		First(&scores)
 
 	if result.Error != nil {
 		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
@@ -293,12 +296,18 @@ func ShowScoreByTotal1(ctx *fiber.Ctx) error {
 		ids = append(ids, s.ID)
 	}
 
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
+		Where("id_siswa IN ?", ids).
+		Group("id_siswa")
+
 	var nilai []models.T_Nilai
 	err = database.DB.
-		Select("id, id_siswa, total").
-		Where("id_siswa IN ?", ids).
-		Order("total DESC").
-		Find(&nilai).Error
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Gagal mengambil data nilai",
@@ -364,12 +373,18 @@ func ShowScoreByTotal2(ctx *fiber.Ctx) error {
 		ids = append(ids, s.ID)
 	}
 
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
+		Where("id_siswa IN ?", ids).
+		Group("id_siswa")
+
 	var nilai []models.T_Nilai
 	err = database.DB.
-		Select("id, id_siswa, total").
-		Where("id_siswa IN ?", ids).
-		Order("total DESC").
-		Find(&nilai).Error
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Gagal mengambil data nilai",
@@ -435,12 +450,18 @@ func ShowScoreByTotal3(ctx *fiber.Ctx) error {
 		ids = append(ids, s.ID)
 	}
 
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
+		Where("id_siswa IN ?", ids).
+		Group("id_siswa")
+
 	var nilai []models.T_Nilai
 	err = database.DB.
-		Select("id, id_siswa, total").
-		Where("id_siswa IN ?", ids).
-		Order("total DESC").
-		Find(&nilai).Error
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Gagal mengambil data nilai",
@@ -506,12 +527,95 @@ func ShowScoreByTotal4(ctx *fiber.Ctx) error {
 		ids = append(ids, s.ID)
 	}
 
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
+		Where("id_siswa IN ?", ids).
+		Group("id_siswa")
+
 	var nilai []models.T_Nilai
 	err = database.DB.
-		Select("id, id_siswa, total").
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data nilai",
+		})
+	}
+
+	siswaMap := make(map[uint]models.T_Siswa)
+	for _, s := range students {
+		siswaMap[s.ID] = s
+	}
+
+	var siswaResponse []SiswaResponse
+	var nilaiResponse []NilaiResponse
+	for _, n := range nilai {
+		s, ok := siswaMap[n.Id_Siswa]
+		if !ok {
+			continue
+		}
+
+		siswaResponse = append(siswaResponse, SiswaResponse{
+			ID:                   s.ID,
+			Nama:                 s.First_Name,
+			Pilihan1_UTBK:        *s.Pilihan1_UTBK,
+			Pilihan2_UTBK:        *s.Pilihan2_UTBK,
+			Pilihan1_UTBK_Aktual: *s.Pilihan1_UTBK_Aktual,
+			Pilihan2_UTBK_Aktual: *s.Pilihan2_UTBK_Aktual,
+		})
+
+		nilaiResponse = append(nilaiResponse, NilaiResponse{
+			ID:       n.ID,
+			Id_Siswa: n.Id_Siswa,
+			Total:    n.Total,
+		})
+	}
+
+	return ctx.JSON(fiber.Map{
+		"siswa": siswaResponse,
+		"nilai": nilaiResponse,
+	})
+}
+
+func ShowScoreByTotalSimulation(ctx *fiber.Ctx) error {
+	idProdi := ctx.Params("id_prodi")
+
+	var students []models.T_Siswa
+	err := database.DB.
+		Where("pilihan1_utbk = ?", idProdi).
+		Find(&students).Error
+	if err != nil {
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": "Gagal mengambil data siswa",
+		})
+	}
+
+	if len(students) == 0 {
+		return ctx.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Tidak ada siswa ditemukan",
+		})
+	}
+
+	var ids []uint
+	for _, s := range students {
+		ids = append(ids, s.ID)
+	}
+
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
 		Where("id_siswa IN ?", ids).
-		Order("total DESC").
-		Find(&nilai).Error
+		Group("id_siswa")
+
+	var nilai []models.T_Nilai
+	err = database.DB.
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Gagal mengambil data nilai",
@@ -577,12 +681,18 @@ func ShowScoreByTotalAll(ctx *fiber.Ctx) error {
 		ids = append(ids, s.ID)
 	}
 
+	subQuery := database.DB.
+		Table("t_nilais").
+		Select("MAX(total) as total, id_siswa").
+		Where("id_siswa IN ?", ids).
+		Group("id_siswa")
+
 	var nilai []models.T_Nilai
 	err = database.DB.
-		Select("id, id_siswa, total").
-		Where("id_siswa IN ?", ids).
-		Order("total DESC").
-		Find(&nilai).Error
+		Table("t_nilais").
+		Joins("JOIN (?) as max_nilai ON t_nilais.id_siswa = max_nilai.id_siswa AND t_nilais.total = max_nilai.total", subQuery).
+		Select("t_nilais.id, t_nilais.id_siswa, t_nilais.total").
+		Scan(&nilai).Error
 	if err != nil {
 		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Gagal mengambil data nilai",

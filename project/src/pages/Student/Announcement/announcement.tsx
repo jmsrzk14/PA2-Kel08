@@ -33,7 +33,7 @@ const AnnouncementContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://160.19.166.155:8000/admin/listAnnouncement");
+        const response = await fetch("http://localhost:8000/admin/listAnnouncement");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: Announcement[] = await response.json();
         setAnnouncement(data);

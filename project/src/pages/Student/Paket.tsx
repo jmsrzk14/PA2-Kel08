@@ -54,7 +54,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get("https://160.19.166.155:8000/student/profile", {
+                const response = await axios.get("http://localhost:8000/student/profile", {
                     withCredentials: true 
                 });
                 const data = response.data;
@@ -75,7 +75,7 @@ const TryoutPackageCard = ({
         }
 
         try {
-            const response = await axios.post("https://160.19.166.155:5000/api/checkout", {
+            const response = await axios.post("http://localhost:5000/api/checkout", {
                 order_id,
                 id,
                 amount: price,
@@ -96,7 +96,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await axios.post("https://160.19.166.155:8000/student/sendPayment", dataToSend, {
+                        await axios.post("http://localhost:8000/student/sendPayment", dataToSend, {
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
@@ -132,17 +132,14 @@ const TryoutPackageCard = ({
 
     return (
         <div className="w-full max-w-sm p-6 bg-white rounded-2xl shadow-lg border hover:border-blue-500 transition-all duration-300">
-            {/* Badge Popular */}
             {isPopular && (
                 <div className="flex items-center gap-1 bg-yellow-100 text-yellow-800 text-sm font-medium px-3 py-1 rounded-full w-fit mb-4">
                     <Star size={16} fill="currentColor" /> Popular
                 </div>
             )}
 
-            {/* Header */}
             <h3 className="text-2xl font-bold text-gray-800 mb-2">{nama_paket}</h3>
 
-            {/* Price */}
             <div className="mb-6">
                 <div className="flex items-end gap-2">
                     <span className="text-2xl font-bold text-blue-600">
@@ -150,17 +147,14 @@ const TryoutPackageCard = ({
                     </span>
         
                 </div>
-                <div className="flex items-center gap-2 text-gray-500 mt-2">
-                    <Clock size={16} />
-                    <span>Berlaku {duration}</span>
+                <div className="flex items-center gap-1 text-gray-600 mt-5">
+                    <BookOpen size={16} />
+                    <span>{subjects.length} Mata Pelajaran</span>
                 </div>
             </div>
 
-
-            {/* Button */}
             <div className='space-y-3 flex items-center flex-col'>
                 <button onClick={openModal} className='w-full py-2 bg-white text-blue-600 border border-blue-600 rounded-xl font-medium hover:bg-blue-100 shadow-md hover:shadow-blue-500 transition-all duration-300'>
-                {/* <button onClick={openModal} className='w-full py-2.5 px-4 bg-white text-blue-600 border border-blue-600 rounded-xl font-medium hover:bg-blue-100 transition-colors duration-200'> */}
                     Lihat Detail
                 </button>
                 <button onClick={() => handleCheckout(order_id, id, price)} className="w-full py-3 px-4 bg-blue-600 text-white rounded-xl font-medium hover:bg-blue-700 shadow-lg hover:shadow-blue-500 transition-all duration-300">
@@ -182,20 +176,6 @@ const TryoutPackageCard = ({
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Deskripsi</h3>
                         <p className='text-gray-600'>{deskripsi}</p>
                     </div>
-
-                    {/* <div className='mb-6'>
-                        <h3 className='text-lg font-semibold text-gray-800 mb-2'>Fitur Paket</h3>
-                        <ul className="space-y-3 mb-6">
-                            {features.map((feature, index) => (
-                                <li key={index} className="flex items-center gap-2">
-                                    <div className="flex-shrink-0 w-5 h-5 bg-blue-100 rounded-full flex items-center justify-center border border-blue-500 hover:border-blue-500 shadow-md hover:shadow-blue-500 transition-all duration-300">
-                                        <Check size={12} className="text-blue-600" />
-                                    </div>
-                                    <span className="text-gray-600">{feature}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div> */}
 
                     <div className='mb-6'>
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Mata Pelajaran</h3>
@@ -219,12 +199,8 @@ const TryoutPackageCard = ({
                         <h3 className='text-lg font-semibold text-gray-800 mb-2'>Statistik</h3>
                         <div className="flex gap-4 mb-6">
                             <div className="flex items-center gap-1 text-gray-600">
-                                <Users size={16} />
-                                <span>{participants.toLocaleString()} peserta</span>
-                            </div>
-                            <div className="flex items-center gap-1 text-gray-600">
                                 <BookOpen size={16} />
-                                <span>{subjects.length} mata pelajaran</span>
+                                <span>{subjects.length} Mata Pelajaran</span>
                             </div>
                         </div>
                     </div>
@@ -255,7 +231,7 @@ const Paket = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-        const response = await fetch("https://160.19.166.155:8000/admin/listPacket");
+        const response = await fetch("http://localhost:8000/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
             if (!Array.isArray(data)) {
