@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { Check, Star, Clock, Users, BookOpen, X, AlertTriangleIcon } from 'lucide-react';
+import { Check, Star, Clock, Users, BookOpen, X, AlertTriangleIcon, ChevronLeft, ChevronRight } from 'lucide-react';
 import Modal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -15,6 +15,14 @@ type CoursePackage = {
     participants?: number;
     subjects: string[];
     deskripsi?: string;
+};
+
+type Testimonial = {
+    id: number;
+    nama: string;
+    deskripsi: string;
+    foto?: string;
+    role?: string;
 };
 
 declare global {
@@ -235,7 +243,7 @@ const TryoutPackageCard = ({
                     <AlertTriangleIcon className="mx-auto mb-4 h-14 w-14 text-red-500" />
                     <h2 className='text-xl font-bold text-gray-800 mb-4'>Ops</h2>
                     <p className='text-gray-600 mb-6'>{paymentMessage}</p>
-                    <button onClick={() => { setPaymentOpen(false); navigate('/loginsiswa');}} className='w-full py-2 px-4 bg-teal-500 text-white rounded-md font-medium hover:bg-teal-600 transition-all duration-300'>Tutup</button>
+                    <button onClick={() => { setPaymentOpen(false); navigate('/loginsiswa'); }} className='w-full py-2 px-4 bg-teal-500 text-white rounded-md font-medium hover:bg-teal-600 transition-all duration-300'>Tutup</button>
                 </div>
             </Modal>
         </div>
@@ -247,12 +255,60 @@ export default function Guest() {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visiblePackages, setVisiblePackages] = useState<number>(3);
+    const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+    const [testimonialsLoading, setTestimonialsLoading] = useState<boolean>(true);
+    const [testimonialsError, setTestimonialsError] = useState<string | null>(null);
+    const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const testimoni = useRef(null);
     const blog = useRef(null);
 
-    const scrollTo = (ref : RefObject<HTMLElement>) => {
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const testimonialResponse = await fetch("https://52.205.255.169/testimoni");
+                if (!testimonialResponse.ok) throw new Error("Data testimoni tidak ditemukan!");
+                const testimonialData: Testimonial[] = await testimonialResponse.json();
+                const formattedTestimonials = testimonialData.map((item) => ({
+                    ...item,
+                    role: "Siswa SMA",
+                    foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-testimonial.jpg'
+                }));
+                setTestimonials(formattedTestimonials);
+            } catch (err) {
+                setError((err as Error).message);
+                setTestimonialsError((err as Error).message);
+            } finally {
+                setLoading(false);
+                setTestimonialsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+        }, 5000);
+
+        return () => clearInterval(interval);
+    }, [testimonials.length]);
+
+    const handlePrev = () => {
+        setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    };
+
+    const handleNext = () => {
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    };
+
+    const handleShowMore = () => {
+        setVisiblePackages((prev) => prev + 3);
+    };
+
+    const scrollTo = (ref: RefObject<HTMLElement>) => {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
-      };
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -270,10 +326,6 @@ export default function Guest() {
 
         fetchData();
     }, []);
-
-    const handleShowMore = () => {
-        setVisiblePackages((prev) => prev + 3);
-    };
 
     return (
         <div className="flex flex-col min-h-screen bg-white">
@@ -326,7 +378,7 @@ export default function Guest() {
                             className="w-full rounded-md shadow-md"
                         />
                     </div>
-                    <div ref={testimoni} className="w-full md:w-2/3">
+                    <div className="w-full md:w-2/3">
                         <div className="text-teal-500 text-sm uppercase font-semibold">ABOUT KAWAL PTN</div>
                         <h1 className="text-2xl font-bold mb-4">Welcome to KAWAL PTN</h1>
                         <p className="text-gray-700 mb-4 text-sm">
@@ -410,6 +462,78 @@ export default function Guest() {
                             </p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div ref={testimoni} className="bg-white py-8 px-6 flex justify-center">
+                <div className="max-w-4xl w-full">
+                    <div className="flex justify-center items-center mb-6">
+                        <div className="text-teal-500 mr-2">✓✓</div>
+                        <h2 className="text-xl font-semibold">TESTIMONI</h2>
+                        <div className="text-teal-500 ml-2">✓✓</div>
+                    </div>
+
+                    {testimonialsLoading ? (
+                        <div className="text-center py-8">
+                            <p className="text-gray-600">Memuat testimoni...</p>
+                        </div>
+                    ) : testimonialsError ? (
+                        <div className="text-center py-8">
+                            <p className="text-red-500">{testimonialsError}</p>
+                        </div>
+                    ) : testimonials.length === 0 ? (
+                        <div className="text-center py-8">
+                            <p className="text-gray-600">Belum ada testimoni tersedia.</p>
+                        </div>
+                    ) : (
+                        <div className="relative overflow-hidden">
+                            <div
+                                className="flex transition-transform duration-500 ease-in-out"
+                                style={{ transform: `translateX(-${currentTestimonial * 100}%)` }}
+                            >
+                                {testimonials.map((testimonial, index) => (
+                                    <div key={testimonial.id} className="min-w-full flex justify-center">
+                                        <div className="text-center w-full max-w-md">
+                                            <img
+                                                src={testimonial.foto}
+                                                alt={`Testimonial ${testimonial.nama}`}
+                                                className="w-20 h-20 rounded-full border-2 border-teal-500 p-1 mx-auto mb-3"
+                                            />
+                                            <h5 className="text-lg font-semibold text-gray-800">{testimonial.nama}</h5>
+                                            <p className="text-sm text-gray-600">{testimonial.role}</p>
+                                            <div className="bg-gray-100 text-gray-700 p-4 rounded-md mt-3 text-sm">
+                                                <p>{testimonial.deskripsi}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <button
+                                onClick={handlePrev}
+                                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
+                            >
+                                <ChevronLeft size={24} />
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
+                            >
+                                <ChevronRight size={24} />
+                            </button>
+
+                            <div className="flex justify-center mt-4 space-x-2">
+                                {testimonials.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentTestimonial(index)}
+                                        className={`w-3 h-3 rounded-full ${currentTestimonial === index ? 'bg-teal-500' : 'bg-gray-300'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
