@@ -70,7 +70,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/student/profile", {
+                const response = await fetch("https://kawalptn.store/student/profile", {
                     credentials: 'include'
                 });
                 const data = await response.json();
@@ -119,7 +119,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await fetch("https://52.205.255.169/student/sendPayment", {
+                        await fetch("https://kawalptn.store/student/sendPayment", {
                             method: 'POST',
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
@@ -277,7 +277,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchPackages = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/admin/listPacket");
+                const response = await fetch("https://kawalptn.store/admin/listPacket");
                 if (!response.ok) throw new Error("Data paket tidak ditemukan!");
                 const data: CoursePackage[] = await response.json();
                 setPackages(data);
@@ -295,12 +295,12 @@ export default function Guest() {
     useEffect(() => {
         const fetchTestimonials = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/admin/listTesti");
+                const response = await fetch("https://kawalptn.store/admin/listTesti");
                 if (!response.ok) throw new Error("Data testimoni tidak ditemukan!");
                 const data: Testimonial[] = await response.json();
                 const formattedTestimonials = data.map((item) => ({
                     ...item,
-                    foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-testimonial.jpg'
+                    foto: item.foto ? `https://kawalptn.store/${item.foto}` : '/default-testimonial.jpg'
                 }));
                 setTestimonials(formattedTestimonials);
             } catch (err) {
@@ -317,12 +317,12 @@ export default function Guest() {
     useEffect(() => {
         const fetchBlogs = async () => {
             try {
-                const response = await fetch("https://52.205.255.169/admin/listNews");
+                const response = await fetch("https://kawalptn.store/admin/listNews");
                 if (!response.ok) throw new Error("Data blog tidak ditemukan!");
                 const data: BlogPost[] = await response.json();
                 const formattedBlogs = data.map((item) => ({
                     ...item,
-                    foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-blog.jpg'
+                    foto: item.foto ? `https://kawalptn.store/${item.foto}` : '/default-blog.jpg'
                 }));
                 setBlogs(formattedBlogs);
             } catch (err) {
