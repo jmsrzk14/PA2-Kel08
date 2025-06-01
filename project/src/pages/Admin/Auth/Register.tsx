@@ -70,7 +70,7 @@ const Register: React.FC = () => {
     if (!valid) return;
 
     try {
-      const response = await axios.post('https://52.205.255.169/admin/register', {
+      const response = await axios.post('https://kawalptn.store/admin/register', {
         name: formData.name,
         email: formData.email,
         password: formData.password,

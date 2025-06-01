@@ -257,7 +257,7 @@ func Logout(c *fiber.Ctx) error {
 	cookie.Value = ""
 	cookie.Expires = time.Now().Add(-time.Minute)
 	cookie.HTTPOnly = true
-	cookie.Secure = false
+	cookie.Secure = true
 
 	c.Cookie(cookie)
 

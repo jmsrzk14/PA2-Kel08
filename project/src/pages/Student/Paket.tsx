@@ -54,7 +54,7 @@ const TryoutPackageCard = ({
     useEffect(() => {
         const fetchUserProfile = async () => {
             try {
-                const response = await axios.get("https://52.205.255.169/student/profile", {
+                const response = await axios.get("https://kawalptn.store/student/profile", {
                     withCredentials: true 
                 });
                 const data = response.data;
@@ -75,7 +75,7 @@ const TryoutPackageCard = ({
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/checkout", {
+            const response = await axios.post("https://pa2-kel08.onrender.com/api/checkout", {
                 order_id,
                 id,
                 amount: price,
@@ -96,7 +96,7 @@ const TryoutPackageCard = ({
                     console.log("Data yang dikirim ke /payment/success:", dataToSend.toString());
 
                     try {
-                        await axios.post("https://52.205.255.169/student/sendPayment", dataToSend, {
+                        await axios.post("https://kawalptn.store/student/sendPayment", dataToSend, {
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
@@ -231,7 +231,7 @@ const Paket = () => {
     useEffect(() => {
     const fetchData = async () => {
         try {
-        const response = await fetch("https://52.205.255.169/admin/listPacket");
+        const response = await fetch("https://kawalptn.store/admin/listPacket");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: CoursePackage[] = await response.json();
             if (!Array.isArray(data)) {

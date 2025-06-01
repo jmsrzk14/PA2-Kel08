@@ -43,7 +43,7 @@ const Navbar: React.FC = () => {
       setLoading(true);
       setError('');
       try {
-        const response = await axios.get(`https://52.205.255.169/student/profile`, {
+        const response = await axios.get(`https://kawalptn.store/student/profile`, {
           withCredentials: true,
         });
 

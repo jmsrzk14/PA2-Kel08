@@ -37,7 +37,7 @@ const StudentsContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://52.205.255.169/admin/listStudent");
+        const response = await fetch("https://kawalptn.store/admin/listStudent");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: Students[] = await response.json();
         setStudents(data);
@@ -62,7 +62,7 @@ const StudentsContent = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: `Data siswa akan dihapus secara permanen! ${id}`,
+      text: `Data siswa akan dihapus secara permanen!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
@@ -72,7 +72,7 @@ const StudentsContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://52.205.255.169/admin/listStudent/${id}`, {
+          const response = await fetch(`https://kawalptn.store/admin/listStudent/${id}`, {
             method: "DELETE",
           });
 

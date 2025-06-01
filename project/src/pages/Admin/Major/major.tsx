@@ -40,7 +40,7 @@ const MajorContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("https://52.205.255.169/admin/listMajor");
+        const response = await fetch("https://kawalptn.store/admin/listMajor");
         if (!response.ok) throw new Error("Data tidak ditemukan!");
         const data: MajorPackage[] = await response.json();
         setMajor(data);
@@ -75,7 +75,7 @@ const MajorContent = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          const response = await fetch(`https://52.205.255.169/admin/listMajor/${id}`, {
+          const response = await fetch(`https://kawalptn.store/admin/listMajor/${id}`, {
             method: "DELETE",
           });
             if (!response.ok) throw new Error("Gagal menghapus Program Studi");             

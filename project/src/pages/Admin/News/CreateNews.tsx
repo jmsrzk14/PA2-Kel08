@@ -33,7 +33,7 @@ const TambahBerita = () => {
     formData.append("foto", foto); 
 
     try {
-      const response = await fetch("https://52.205.255.169/admin/createNews", {
+      const response = await fetch("https://kawalptn.store/admin/createNews", {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",

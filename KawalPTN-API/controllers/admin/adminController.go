@@ -117,8 +117,8 @@ func Login(ctx *fiber.Ctx) error {
 		Value:    prefixedToken,
 		Expires:  time.Now().Add(time.Minute * 30),
 		HTTPOnly: true,
-		Secure:   false,
-		SameSite: "Lax",
+		Secure:   true,
+		SameSite: "None",
 	}
 
 	ctx.Cookie(&cookie)
@@ -174,7 +174,7 @@ func Logout(c *fiber.Ctx) error {
 	cookie.Value = ""
 	cookie.Expires = time.Now().Add(-time.Minute)
 	cookie.HTTPOnly = true
-	cookie.Secure = false
+	cookie.Secure = true
 
 	c.Cookie(cookie)
 

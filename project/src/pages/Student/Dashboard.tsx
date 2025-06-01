@@ -43,7 +43,7 @@ const DashboardContent = () => {
   useEffect(() => {
     const fetchUserProfile = async () => {
       try {
-        const response = await axios.get("https://52.205.255.169/student/profile", {
+        const response = await axios.get("https://kawalptn.store/student/profile", {
           withCredentials: true,
         });
         setUserId(response.data.data.id);
@@ -58,7 +58,7 @@ const DashboardContent = () => {
     const fetchUserScores = async () => {
       if (userId !== null) {
         try {
-          const response = await axios.get(`https://52.205.255.169/admin/viewScorePacket/${userId}`, {
+          const response = await axios.get(`https://kawalptn.store/admin/viewScorePacket/${userId}`, {
             withCredentials: true,
           });
           setScores(response.data);
@@ -78,7 +78,7 @@ const DashboardContent = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("https://52.205.255.169/student/myPacket", {
+        const response = await axios.get("https://kawalptn.store/student/myPacket", {
           withCredentials: true,
         });
 
@@ -88,7 +88,7 @@ const DashboardContent = () => {
           packets.map(async (packet: { id: string; id_paket: number }) => {
             try {
               const paketResponse = await axios.get(
-                `https://52.205.255.169/admin/viewPacket/${packet.id_paket}`
+                `https://kawalptn.store/admin/viewPacket/${packet.id_paket}`
               );
               return {
                 ...packet,
@@ -112,7 +112,7 @@ const DashboardContent = () => {
               try {
                 console.log(selectedYear, userId, packet.id_paket);
                 const detailRes = await axios.get(
-                  `https://52.205.255.169/admin/viewScoreDetail/${selectedYear}/${userId}/${packet.id_paket}`,
+                  `https://kawalptn.store/admin/viewScoreDetail/${selectedYear}/${userId}/${packet.id_paket}`,
                   { withCredentials: true }
                 );
                 return {
