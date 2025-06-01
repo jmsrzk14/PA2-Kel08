@@ -62,7 +62,7 @@ const StudentsContent = () => {
   const handleDelete = async (id: number) => {
     Swal.fire({
       title: 'Apakah Anda yakin?',
-      text: `Data siswa akan dihapus secara permanen! ${id}`,
+      text: `Data siswa akan dihapus secara permanen!`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
