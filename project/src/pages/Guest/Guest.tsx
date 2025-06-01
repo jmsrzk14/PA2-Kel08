@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { Check, Star, Clock, Users, BookOpen, X, AlertTriangleIcon, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Check, Star, Clock, Users, BookOpen, X, AlertTriangleIcon, ChevronLeft, ChevronRight, Tag, Calendar } from 'lucide-react';
 import Modal from 'react-modal';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -17,12 +17,18 @@ type CoursePackage = {
     deskripsi?: string;
 };
 
+type BlogPost = {
+    id: number;
+    judul: string;
+    deskripsi: string;
+    foto?: string;
+};
+
 type Testimonial = {
     id: number;
     nama: string;
     deskripsi: string;
     foto?: string;
-    role?: string;
 };
 
 declare global {
@@ -251,8 +257,10 @@ const TryoutPackageCard = ({
 };
 
 export default function Guest() {
+    const [isOpen, setIsOpen] = useState(false);
     const [packages, setPackages] = useState<CoursePackage[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
+    const [packagesError, setPackagesError] = useState<string | null>(null);
+    const [packagesLoading, setPackagesLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [visiblePackages, setVisiblePackages] = useState<number>(3);
     const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -261,30 +269,77 @@ export default function Guest() {
     const [currentTestimonial, setCurrentTestimonial] = useState(0);
     const testimoni = useRef(null);
     const blog = useRef(null);
+    const [blogs, setBlogs] = useState<BlogPost[]>([]);
+    const [blogsLoading, setBlogsLoading] = useState<boolean>(true);
+    const [blogsError, setBlogsError] = useState<string | null>(null);
+    const [currentBlog, setCurrentBlog] = useState(0);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchPackages = async () => {
             try {
-                const testimonialResponse = await fetch("https://52.205.255.169/testimoni");
-                if (!testimonialResponse.ok) throw new Error("Data testimoni tidak ditemukan!");
-                const testimonialData: Testimonial[] = await testimonialResponse.json();
-                const formattedTestimonials = testimonialData.map((item) => ({
+                const response = await fetch("https://52.205.255.169/admin/listPacket");
+                if (!response.ok) throw new Error("Data paket tidak ditemukan!");
+                const data: CoursePackage[] = await response.json();
+                setPackages(data);
+            } catch (err) {
+                setPackagesError((err as Error).message);
+            } finally {
+                setPackagesLoading(false);
+            }
+        };
+
+        fetchPackages();
+    }, []);
+
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            try {
+                const response = await fetch("https://52.205.255.169/admin/listTesti");
+                if (!response.ok) throw new Error("Data testimoni tidak ditemukan!");
+                const data: Testimonial[] = await response.json();
+                const formattedTestimonials = data.map((item) => ({
                     ...item,
-                    role: "Siswa SMA",
                     foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-testimonial.jpg'
                 }));
                 setTestimonials(formattedTestimonials);
             } catch (err) {
-                setError((err as Error).message);
                 setTestimonialsError((err as Error).message);
             } finally {
-                setLoading(false);
                 setTestimonialsLoading(false);
             }
         };
 
-        fetchData();
+        fetchTestimonials();
     }, []);
+
+    useEffect(() => {
+        const fetchBlogs = async () => {
+            try {
+                const response = await fetch("https://52.205.255.169/admin/listNews");
+                if (!response.ok) throw new Error("Data blog tidak ditemukan!");
+                const data: BlogPost[] = await response.json();
+                const formattedBlogs = data.map((item) => ({
+                    ...item,
+                    foto: item.foto ? `https://52.205.255.169/${item.foto}` : '/default-blog.jpg'
+                }));
+                setBlogs(formattedBlogs);
+            } catch (err) {
+                setBlogsError((err as Error).message);
+            } finally {
+                setBlogsLoading(false);
+            }
+        };
+
+        fetchBlogs();
+    }, []);
+
+    const handlePrevBlog = () => {
+        setCurrentBlog((prev) => (prev - 1 + blogs.length) % blogs.length);
+    };
+
+    const handleNextBlog = () => {
+        setCurrentBlog((prev) => (prev + 1) % blogs.length);
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -310,53 +365,70 @@ export default function Guest() {
         ref.current?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch("https://52.205.255.169/admin/listPacket");
-                if (!response.ok) throw new Error("Data tidak ditemukan!");
-                const data: CoursePackage[] = await response.json();
-                setPackages(data);
-            } catch (err) {
-                setError((err as Error).message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, []);
-
     return (
         <div className="flex flex-col min-h-screen bg-white">
-            <header className="fixed top-0 left-0 w-full bg-teal-500 backdrop-blur-md p-4 flex justify-between items-center shadow-md transition-all duration-300 z-50">
-                <div className="flex items-center">
-                    <img
-                        src="/kawalbg.png"
-                        alt="KAWAL PTN Logo"
-                        className="h-8 mr-2"
-                    />
-                    <div className="text-white font-bold">
-                        Selamat Datang di Kawal PTN
+            <header className="fixed top-0 left-0 w-full bg-teal-500 backdrop-blur-md p-4 shadow-md z-50">
+                <div className="flex justify-between items-center">
+                    <Link to="/" className="flex items-center">
+                        <img
+                            src="/kawalbg.png"
+                            alt="KAWAL PTN Logo"
+                            className="h-8 mr-2 cursor-pointer"
+                        />
+                        <span className="text-white font-bold hidden sm:inline">Kawal PTN</span>
+                    </Link>
+
+                    <div className="hidden sm:flex items-center space-x-6 text-white font-semibold">
+                        <button onClick={() => scrollTo(testimoni)} className="hover:animate-pulse hover:underline mr-4">
+                            Testimoni
+                        </button>
+                        <button onClick={() => scrollTo(blog)} className="hover:animate-pulse hover:underline mr-4">
+                            Blog
+                        </button>
+                    </div>
+
+                    <div className="sm:hidden">
+                        <button onClick={() => setIsOpen(!isOpen)} className="text-white focus:outline-none">
+                            <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2"
+                                viewBox="0 0 24 24">
+                                {isOpen ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+                                )}
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div className="hidden sm:flex items-center text-white font-bold space-x-4">
+                        <Link to="/loginsiswa">
+                            <button className="bg-white text-teal-500 px-4 py-2 rounded-md text-sm flex items-center">
+                                <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" strokeWidth="2"
+                                    viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round"
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                                Masuk / Daftar
+                            </button>
+                        </Link>
                     </div>
                 </div>
-                <div className="text-white font-bold">
-                    <button onClick={() => scrollTo(testimoni)} className="hover:animate-pulse hover:underline mr-4">
-                        Testimoni
-                    </button>
-                    <button onClick={() => scrollTo(blog)} className="hover:animate-pulse hover:underline mr-4">
-                        Blog
-                    </button>
-                </div>
-                <button className="bg-white text-teal-500 px-4 py-2 rounded-md flex items-center text-sm">
-                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                    </svg>
-                    <Link to="/loginsiswa">Masuk / Daftar</Link>
-                    <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                    </svg>
-                </button>
+
+                {isOpen && (
+                    <div className="sm:hidden mt-2 space-y-2 text-white font-bold">
+                        <button onClick={() => scrollTo(testimoni)} className="block w-full text-left px-4 hover:bg-teal-600">
+                            Testimoni
+                        </button>
+                        <button onClick={() => scrollTo(blog)} className="block w-full text-left px-4 hover:bg-teal-600">
+                            Blog
+                        </button>
+                        <Link to="/loginsiswa" className="block px-4">
+                            <button className="w-full text-left bg-white text-teal-500 px-4 py-2 rounded-md text-sm hover:bg-teal-500 hover:text-white shadow-lg hover:shadow-teal-600 transition-all duration-300">
+                                Masuk / Daftar
+                            </button>
+                        </Link>
+                    </div>
+                )}
             </header>
 
             <div className="flex justify-center pt-16">
@@ -366,6 +438,75 @@ export default function Guest() {
                         alt="Kawal PTN Hero Banner"
                         className="w-full rounded-md h-auto"
                     />
+                </div>
+            </div>
+
+            <div ref={blog} className="bg-white py-8 px-6 flex justify-center">
+                <div className="max-w-4xl w-full">
+                    <div className="flex justify-center items-center mb-6">
+                        <div className="text-teal-500 mr-2">✓✓</div>
+                        <h2 className="text-xl font-bold">BLOG KAWAL PTN</h2>
+                        <div className="text-teal-500 ml-2">✓✓</div>
+                    </div>
+
+                    {blogsLoading ? (
+                        <p className="text-center text-gray-300">Memuat artikel...</p>
+                    ) : blogs.length === 0 ? (
+                        <p className="text-center text-gray-300">Belum ada artikel tersedia.</p>
+                    ) : (
+                        <div className="relative rounded-lg overflow-hidden">
+                            {(() => {
+                                const blog = blogs[currentBlog];
+                                return (
+                                    <div key={blog.id} className="min-w-full flex justify-center">
+                                        <div className="relative w-full">
+                                            <img
+                                                src={blog.foto}
+                                                alt={blog.judul}
+                                                className="w-full h-[400px] object-cover opacity-40"
+                                            />
+                                            <div className="absolute inset-0 flex flex-col justify-center px-8 sm:px-16 lg:px-24">
+                                                <h3 className="text-2xl sm:text-3xl font-bold mb-4">{blog.judul}</h3>
+                                                <div
+                                                    className="text-sm sm:text-base max-w-2xl prose prose-sm"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: `<blockquote>${blog.deskripsi}</blockquote>`,
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        {blogs.length > 1 && (
+                                            <>
+                                                <button
+                                                    onClick={handlePrevBlog}
+                                                    className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
+                                                >
+                                                    <ChevronLeft size={24} />
+                                                </button>
+                                                <button
+                                                    onClick={handleNextBlog}
+                                                    className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-teal-500 text-white p-2 rounded-full hover:bg-teal-600"
+                                                >
+                                                    <ChevronRight size={24} />
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                );
+                            })()}
+                            {/* Indicator */}
+                            <div className="flex justify-center mt-4 space-x-2">
+                                {blogs.map((_, index) => (
+                                    <button
+                                        key={index}
+                                        onClick={() => setCurrentBlog(index)}
+                                        className={`w-3 h-3 rounded-full ${currentBlog === index ? 'bg-teal-500' : 'bg-gray-300'}`}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -410,7 +551,7 @@ export default function Guest() {
                 <div className="max-w-4xl w-full">
                     <div className="flex justify-center items-center mb-6">
                         <div className="text-teal-500 mr-2">✓✓</div>
-                        <h2 className="text-xl font-semibold">MISI KAWAL PTN</h2>
+                        <h2 className="text-xl font-bold">MISI KAWAL PTN</h2>
                         <div className="text-teal-500 ml-2">✓✓</div>
                     </div>
 
@@ -450,7 +591,7 @@ export default function Guest() {
                 <div className="max-w-4xl w-full">
                     <div className="flex justify-center items-center mb-6">
                         <div className="text-teal-500 mr-2">✓✓</div>
-                        <h2 className="text-xl font-semibold">VISI KAWAL PTN</h2>
+                        <h2 className="text-xl font-bold">VISI KAWAL PTN</h2>
                         <div className="text-teal-500 ml-2">✓✓</div>
                     </div>
 
@@ -469,17 +610,13 @@ export default function Guest() {
                 <div className="max-w-4xl w-full">
                     <div className="flex justify-center items-center mb-6">
                         <div className="text-teal-500 mr-2">✓✓</div>
-                        <h2 className="text-xl font-semibold">TESTIMONI</h2>
+                        <h2 className="text-xl font-bold">TESTIMONI</h2>
                         <div className="text-teal-500 ml-2">✓✓</div>
                     </div>
 
                     {testimonialsLoading ? (
                         <div className="text-center py-8">
                             <p className="text-gray-600">Memuat testimoni...</p>
-                        </div>
-                    ) : testimonialsError ? (
-                        <div className="text-center py-8">
-                            <p className="text-red-500">{testimonialsError}</p>
                         </div>
                     ) : testimonials.length === 0 ? (
                         <div className="text-center py-8">
@@ -500,10 +637,10 @@ export default function Guest() {
                                                 className="w-20 h-20 rounded-full border-2 border-teal-500 p-1 mx-auto mb-3"
                                             />
                                             <h5 className="text-lg font-semibold text-gray-800">{testimonial.nama}</h5>
-                                            <p className="text-sm text-gray-600">{testimonial.role}</p>
-                                            <div className="bg-gray-100 text-gray-700 p-4 rounded-md mt-3 text-sm">
-                                                <p>{testimonial.deskripsi}</p>
-                                            </div>
+                                            <div className="bg-teal-100 p-4 rounded-md mt-3 text-sm prose prose-sm" dangerouslySetInnerHTML={{
+                                                __html: `<blockquote>${testimonial.deskripsi}</blockquote>`
+                                            }}
+                                            />
                                         </div>
                                     </div>
                                 ))}
@@ -541,11 +678,11 @@ export default function Guest() {
                 <div className="max-w-4xl w-full">
                     <div className="flex justify-center items-center mb-6">
                         <div className="bg-teal-500 text-white p-1 rounded-md mr-2">📚</div>
-                        <h2 className="text-xl font-semibold">PAKET-PAKET TRYOUT</h2>
+                        <h2 className="text-xl font-bold">PAKET-PAKET TRYOUT</h2>
                         <div className="bg-teal-500 text-white p-1 rounded-md ml-2">📚</div>
                     </div>
 
-                    {loading ? (
+                    {packagesLoading ? (
                         <div className="text-center py-8">
                             <p className="text-gray-600">Memuat paket tryout...</p>
                         </div>
