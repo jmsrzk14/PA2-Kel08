@@ -265,7 +265,7 @@ export default function Guest() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const testimonialResponse = await fetch("https://kawalptn.store/testimoni");
+                const testimonialResponse = await fetch("https://kawalptn.store/admin/listTesti");
                 if (!testimonialResponse.ok) throw new Error("Data testimoni tidak ditemukan!");
                 const testimonialData: Testimonial[] = await testimonialResponse.json();
                 const formattedTestimonials = testimonialData.map((item) => ({
