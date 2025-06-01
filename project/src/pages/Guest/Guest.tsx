@@ -502,7 +502,7 @@ export default function Guest() {
                                             <h5 className="text-lg font-semibold text-gray-800">{testimonial.nama}</h5>
                                             <p className="text-sm text-gray-600">{testimonial.role}</p>
                                             <div className="bg-gray-100 text-gray-700 p-4 rounded-md mt-3 text-sm">
-                                                <p>{testimonial.deskripsi}</p>
+                                                <blockquote>${testimonial.deskripsi}</blockquote>
                                             </div>
                                         </div>
                                     </div>
