@@ -37,7 +37,6 @@ app.post('/api/checkout', async (req, res) => {
     }
 });
 
-const PORT = 5000;
-app.listen(PORT, () => {
-    console.log(`Backend berjalan di http://localhost:${PORT}`);
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on port ${process.env.PORT || 3000}`);
 });
