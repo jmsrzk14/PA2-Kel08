@@ -75,7 +75,7 @@ const TryoutPackageCard = ({
         }
 
         try {
-            const response = await axios.post("http://localhost:5000/api/checkout", {
+            const response = await axios.post("https://pa2-kel08.onrender.com/api/checkout", {
                 order_id,
                 id,
                 amount: price,
