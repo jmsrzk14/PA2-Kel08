@@ -283,6 +283,7 @@ export default function Guest() {
                 setPackages(data);
             } catch (err) {
                 setPackagesError((err as Error).message);
+                setPackages([]);
             } finally {
                 setPackagesLoading(false);
             }
@@ -304,6 +305,7 @@ export default function Guest() {
                 setTestimonials(formattedTestimonials);
             } catch (err) {
                 setTestimonialsError((err as Error).message);
+                setTestimonials([]);
             } finally {
                 setTestimonialsLoading(false);
             }
@@ -325,6 +327,7 @@ export default function Guest() {
                 setBlogs(formattedBlogs);
             } catch (err) {
                 setBlogsError((err as Error).message);
+                setBlogs([]);
             } finally {
                 setBlogsLoading(false);
             }
