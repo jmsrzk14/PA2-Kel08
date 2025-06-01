@@ -503,7 +503,7 @@ export default function Guest() {
                                             <p className="text-sm text-gray-600">{testimonial.role}</p>
                                             <div className="bg-gray-100 text-gray-700 p-4 rounded-md mt-3 text-sm" 
                                                 dangerouslySetInnerHTML={{
-                                                    __html: `<blockquote>${deskripsi}</blockquote>`
+                                                    __html: `<blockquote>${testimonial.deskripsi}</blockquote>`
                                                 }}>
                                             </div>
                                         </div>
