@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Bell, User, LogOut, ChevronDown } from 'lucide-react';
-import { Link,useNavigate } from 'react-router-dom';
+import { User, LogOut, ChevronDown } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Navbar: React.FC = () => {
@@ -67,9 +67,6 @@ const Navbar: React.FC = () => {
         <h2 className="text-gray-700 text-lg font-semibold">Welcome, {nama}</h2>
       </div>
       <div className="flex items-center gap-4" ref={menuRef}>
-        <button className="p-2 rounded-full hover:bg-gray-100">
-          <Bell size={20} className="text-gray-600" />
-        </button>
         <div className="relative inline-block">
           <button className="flex items-center gap-2 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition" onClick={() => setMenuOpen(!menuOpen)}>
             <User size={20} className="text-gray-700" />
